@@ -1,0 +1,23 @@
+﻿sp_id,sp_name,sp_grade,sp_type,description,sp_target,durationRound,effect_amount,box_drop_rate,enemy_drop_rate,FileName,비고
+0,독침,0,0,적의 체력을 3만큼 감소시킨다.,3,0,3,0.5,0.5,SupplyStinger,-
+1,화염병,0,0,적의 체력을 2만큼 감소시킨다.,3,0,2,0.5,0.25,SupplyMolotovCocktail,-
+2,수면제,1,0,2라운드 동안 적을 행동 불능 상태로 만든다. ,3,2,0,0.75,0,SupplySleepingPills,-
+3,얼음 결정,0,0,적의 공격력을 [effect_amount]% 낮춘다.,3,0,10,0,0.75,SupplyIceCrystals,-
+4,지뢰,0,0,대상 적에게 지뢰를 설치하고 다음 턴에 체력을 2만큼 감소시킨다. ,3,2,2,0.5,0,SupplyLandMine,-
+5,호신용 단도,0,0,적의 공격력을 [effect_amount]% 낮춘다.,3,0,4,0.25,0.25,SupplyDaggerForSelfDefense,-
+6,강철 방패,2,1,적의 공격을 1회 무효화한다. 1라운드 동안 적의 공격으로부터 피해를 입지 않는다.,0,0,0,0.25,0,SupplySteelShield,-
+7,수호 반지,1,1,적의 공격의  [effect_amount]%만 받으며 효과는 2라운드 동안 유지된다.,0,2,60,0.25,0,SupplyGuardianRing,-
+8,아이언 포션,0,1,적의 공격의  [effect_amount]%만 받으며 효과는 2라운드 동안 유지된다.,0,2,80,0.5,0.5,SupplyIronPotion,-
+9,불사의 포션,0,1,적의 공격의  [effect_amount]%만 받으며 효과는 2라운드 동안 유지된다.,0,2,90,0.7,0.5,SupplyImmortalPotion,-
+10,강인의 엘릭서,0,1,피해 저항의 최대치를 10% 높여준다.,0,0,10,0.5,0.5,SupplyStrengthPotion,-
+11,투명 망토,0,1,1라운드 동안 모든 아군 캐릭터는 체력 피해의 [effect_amount]% 만 받는다. ,2,1,90,0.5,0,SupplyInvisibilityCloak,-
+12,hp포션,0,2,체력을 2만큼 회복한다.,0,0,2,0.75,0.75,SupplyHpPotion,-
+13,호밀빵,0,2,체력을 1만큼 회복한다.,0,0,1,0.75,0.5,SupplyRyeBread,-
+14,성수,1,2,캐릭터 1명의 행동 불능 상태를 해제한다. ,1,0,0,0.5,0,SupplyHolyWater,-
+15,금빛 약초,1,2,행동력을 최대치까지 회복한다.,0,0,100,0.75,0,SupplyGoldenHerb,-
+16,알약 주머니,0,2,체력을  2만큼 회복한다.,0,0,2,0,0.75,SupplyPillBag,-
+17,맥스 포션,2,2,체력을 최대치까지 회복한다. ,0,0,100,0.25,0.25,SupplyMaxPotion,-
+18,별가루,0,3,2라운드 동안 모든 아군 캐릭터의 공격력이 [effect_amount]% 증가한다.,2,2,5,0.25,0,SupplyStardust,-
+19,요정의 날개,2,3,3라운드 동안 공격력이 [effect_amount]% 증가한다.,0,3,15,0,0.5,SupplyFairyWings,-
+20,곡옥,0,3,2라운드 동안 공격력이 [effect_amount]% 증가한다.,0,2,10,0.25,0.25,SupplyMagatama,-
+21,수정구슬,0,3,2라운드 동안 공격력이 [effect_amount]% 증가한다.,0,2,15,0.5,0,SupplyCrystalBall,-

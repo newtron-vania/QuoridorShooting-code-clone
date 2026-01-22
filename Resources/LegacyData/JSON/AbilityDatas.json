@@ -1,0 +1,206 @@
+{
+  "Datas": [
+    {
+      "AbilityId": 1001,
+      "AbilityName": "도발",
+      "Description": "아군에게 가까이 위치한 적의 주의를 끌고, 그들에게서 오는 공격을 막는다. 2만큼의 피해를 방어한다.",
+      "Ap": 80,
+      "RangeId": 11,
+      "AbilityDuration": 1,
+      "SelectType": "CenterSelect",
+      "TargetType": "Hate",
+      "IsBlock": "FALSE",
+      "AbilityType": "SimpleAbility",
+      "EffectList": [
+        3301,
+        3401
+      ]
+    },
+    {
+      "AbilityId": 1002,
+      "AbilityName": "관통 공격",
+      "Description": "인접한 하나의 적에게 피해 3의 깊은 찌르기 공격을 가한다.",
+      "Ap": 80,
+      "RangeId": 1,
+      "AbilityDuration": 0,
+      "SelectType": "CenterSelect",
+      "TargetType": "Hate",
+      "IsBlock": "TRUE",
+      "AbilityType": "SimpleAbility",
+      "EffectList": [
+        3001
+      ]
+    },
+    {
+      "AbilityId": 1003,
+      "AbilityName": "연막탄",
+      "Description": "2라운드 유지되는 연막 지대를 생성한다. 지대 내 모든 적은 공격이 불가능하다.",
+      "Ap": 80,
+      "RangeId": 2,
+      "AbilityDuration": 2,
+      "SelectType": "CenterSelect",
+      "TargetType": "Hate",
+      "IsBlock": "FALSE",
+      "AbilityType": "SimpleAbility",
+      "EffectList": [
+        3501
+      ]
+    },
+    {
+      "AbilityId": 1004,
+      "AbilityName": "정비",
+      "Description": "아군의 장비를 점검하여 1라운드 동안 공격력을 2씩 높여준다.",
+      "Ap": 80,
+      "RangeId": 3,
+      "AbilityDuration": 1,
+      "SelectType": "CenterSelect",
+      "TargetType": "Friend",
+      "IsBlock": "FALSE",
+      "AbilityType": "SimpleAbility",
+      "EffectList": [
+        3402
+      ]
+    },
+    {
+      "AbilityId": 1005,
+      "AbilityName": "정밀사격",
+      "Description": "산탄총을 이용해 범위 내에 있는 모든 적에게 각각 피해 2를 끼친다.",
+      "Ap": 80,
+      "RangeId": 12,
+      "AbilityDuration": 0,
+      "SelectType": "CenterSelect",
+      "TargetType": "Hate",
+      "IsBlock": "TRUE",
+      "AbilityType": "SimpleAbility",
+      "EffectList": [
+        3002
+      ]
+    },
+    {
+      "AbilityId": 1006,
+      "AbilityName": "출혈",
+      "Description": "인접한 적에게 출혈 피해1을 입힌다. 피해를 입은 적은 해당 턴 공격이 불가능하다.",
+      "Ap": 80,
+      "RangeId": 5,
+      "AbilityDuration": 1,
+      "SelectType": "CenterSelect",
+      "TargetType": "Hate",
+      "IsBlock": "FALSE",
+      "AbilityType": "SimpleAbility",
+      "EffectList": [
+        3003,
+        3302
+      ]
+    },
+    {
+      "AbilityId": 1007,
+      "AbilityName": "연격",
+      "Description": "인접 적에게 피해1을 입힌다. 최소 2회의 콤보 성공 시(인접 적이 두명이상), 피해2를 추가로 입힌다.",
+      "Ap": 80,
+      "RangeId": 6,
+      "AbilityDuration": 0,
+      "SelectType": "CenterSelect",
+      "TargetType": "Hate",
+      "IsBlock": "TRUE",
+      "AbilityType": "ComboAbility",
+      "EffectList": [
+        3101,
+        5001,
+        3002
+      ]
+    },
+    {
+      "AbilityId": 1008,
+      "AbilityName": "독성 폭탄",
+      "Description": "2라운드 유지되는 독 지대를 생성한다. 지대 내 머무르는 캐릭터는 라운드당 피해 1씩 입는다.",
+      "Ap": 80,
+      "RangeId": 13,
+      "AbilityDuration": 2,
+      "SelectType": "MapSelect",
+      "TargetType": "ALL",
+      "IsBlock": "FALSE",
+      "AbilityType": "SimpleAbility",
+      "EffectList": [
+        3502,
+        3004
+      ]
+    },
+    {
+      "AbilityId": 1009,
+      "AbilityName": "수감",
+      "Description": "적 1개를 지정하여 2 라운드 간 이동할 수 없게 한다. 또한 지정된 적은 2라운드 동안 행동력을 회복하지 않는다.",
+      "Ap": 80,
+      "RangeId": 10,
+      "AbilityDuration": 2,
+      "SelectType": "HateSelect",
+      "TargetType": "Hate",
+      "IsBlock": "FALSE",
+      "AbilityType": "SimpleAbility",
+      "EffectList": [
+        3303,
+        3304
+      ]
+    },
+    {
+      "AbilityId": 1010,
+      "AbilityName": "정신조종",
+      "Description": "주술을 걸어 가장 가까운 단일 적을 가장 가까운 아군이 일반 공격을 하게 한다. \n이때 범위 내에 아군과 적군이 중 하나라도 없다면 자해한다.",
+      "Ap": 80,
+      "RangeId": 11,
+      "AbilityDuration": 0,
+      "SelectType": "CenterSelect",
+      "TargetType": "ALL",
+      "IsBlock": "FALSE",
+      "AbilityType": "ComboAbility",
+      "EffectList": [
+        3201,
+        5101
+      ]
+    },
+    {
+      "AbilityId": 1011,
+      "AbilityName": "돌 투척",
+      "Description": "범위 내에 있는 각각의 적에게 피해 2를 끼친다.",
+      "Ap": 80,
+      "RangeId": 9,
+      "AbilityDuration": 0,
+      "SelectType": "CenterSelect",
+      "TargetType": "Hate",
+      "IsBlock": "TRUE",
+      "AbilityType": "SimpleAbility",
+      "EffectList": [
+        3002
+      ]
+    },
+    {
+      "AbilityId": 1012,
+      "AbilityName": "베기",
+      "Description": "단일 적에게 피해 2를 끼친다.",
+      "Ap": 80,
+      "RangeId": 10,
+      "AbilityDuration": 0,
+      "SelectType": "HateSelect",
+      "TargetType": "Hate",
+      "IsBlock": "FALSE",
+      "AbilityType": "SimpleAbility",
+      "EffectList": [
+        3002
+      ]
+    },
+    {
+      "AbilityId": 1013,
+      "AbilityName": "미끌젤리 설치",
+      "Description": "밟는 캐릭터를 기존 이동 방향으로 추가로 한 칸 이동시키는 미끌젤리를 설치한다.",
+      "Ap": 80,
+      "RangeId": 10,
+      "AbilityDuration": 1,
+      "SelectType": "MapSelect",
+      "TargetType": "ALL",
+      "IsBlock": "FALSE",
+      "AbilityType": "SimpleAbility",
+      "EffectList": [
+        3601
+      ]
+    }
+  ]
+}

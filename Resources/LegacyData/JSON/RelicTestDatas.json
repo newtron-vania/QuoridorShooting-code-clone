@@ -1,0 +1,64 @@
+{
+  "Datas": [
+    {
+      "Id": 1001,
+      "Name": "테스트 유물 1 - 전장의 깃발",
+      "Description": "전투 시작 시 아군 전체의 최대 체력, 공격력, AP 회복량을 10% 증가시킵니다.",
+      "TriggerTypes": [
+        "Always"
+      ],
+      "TriggerParams": {},
+      "LogicType": "StatMultiplier",
+      "LogicParams": {
+        "MaxHp": 0.1,
+        "Attack": 0.1,
+        "ApRecovery": 0.1
+      },
+      "TargetFilter": "Allies",
+      "Rarity": "Common",
+      "IconPath": "Sprites/Relics/Relic_1001"
+    },
+    {
+      "Id": 1002,
+      "Name": "테스트 유물 2 - 광전사의 피",
+      "Description": "체력이 50% 이하일 때 모든 능력치가 20% 상승합니다. 체력이 회복되면 효과는 사라집니다.",
+      "TriggerTypes": [
+        "OnHpChanged"
+      ],
+      "TriggerParams": {
+        "Threshold": 0.5,
+        "IsReversible": 1.0
+      },
+      "LogicType": "ConditionalStatBoost",
+      "LogicParams": {
+        "MaxHp": 0.2,
+        "Attack": 0.2,
+        "ApRecovery": 0.2
+      },
+      "TargetFilter": "Self",
+      "Rarity": "Rare",
+      "IconPath": "Sprites/Relics/Relic_1002"
+    },
+    {
+      "Id": 1003,
+      "Name": "테스트 유물 3 - 가시 갑옷",
+      "Description": "피격 시 2턴 동안 모든 능력치가 10% 상승합니다.",
+      "TriggerTypes": [
+        "OnDamaged"
+      ],
+      "TriggerParams": {
+        "Cooldown": 1.0
+      },
+      "LogicType": "TimedStatModifier",
+      "LogicParams": {
+        "Duration": 2.0,
+        "MaxHp": 0.1,
+        "Attack": 0.1,
+        "ApRecovery": 0.1
+      },
+      "TargetFilter": "Self",
+      "Rarity": "Epic",
+      "IconPath": "Sprites/Relics/Relic_1003"
+    }
+  ]
+}

@@ -1,0 +1,160 @@
+{
+  "Datas": [
+    {
+      "Id": 3001,
+      "EffectType": "Damage",
+      "ValueList": [
+        3,
+        0,
+        1
+      ],
+      "EffectTag": "None"
+    },
+    {
+      "Id": 3002,
+      "EffectType": "Damage",
+      "ValueList": [
+        2,
+        0,
+        1
+      ],
+      "EffectTag": "None"
+    },
+    {
+      "Id": 3003,
+      "EffectType": "Damage",
+      "ValueList": [
+        1,
+        0,
+        1
+      ],
+      "EffectTag": "None"
+    },
+    {
+      "Id": 3004,
+      "EffectType": "Damage",
+      "ValueList": [
+        0,
+        1,
+        1
+      ],
+      "EffectTag": "None"
+    },
+    {
+      "Id": 3005,
+      "EffectType": "Damage",
+      "ValueList": [
+        2,
+        0,
+        1
+      ],
+      "EffectTag": "None"
+    },
+    {
+      "Id": 3101,
+      "EffectType": "ConditionDamage",
+      "ValueList": [
+        1,
+        0,
+        1
+      ],
+      "EffectTag": "None"
+    },
+    {
+      "Id": 3201,
+      "EffectType": "MindControlDamage",
+      "ValueList": [
+        1,
+        1
+      ],
+      "EffectTag": "None"
+    },
+    {
+      "Id": 3301,
+      "EffectType": "StatusEffect",
+      "ValueList": [
+        1
+      ],
+      "EffectTag": "Taunt"
+    },
+    {
+      "Id": 3302,
+      "EffectType": "StatusEffect",
+      "ValueList": [
+        1
+      ],
+      "EffectTag": "Disarm"
+    },
+    {
+      "Id": 3303,
+      "EffectType": "StatusEffect",
+      "ValueList": [
+        2
+      ],
+      "EffectTag": "Bind"
+    },
+    {
+      "Id": 3304,
+      "EffectType": "StatusEffect",
+      "ValueList": [
+        2
+      ],
+      "EffectTag": "Weakness"
+    },
+    {
+      "Id": 3401,
+      "EffectType": "StatEffect",
+      "ValueList": [
+        1,
+        -2
+      ],
+      "EffectTag": "AtkUp"
+    },
+    {
+      "Id": 3402,
+      "EffectType": "StatEffect",
+      "ValueList": [
+        1,
+        2
+      ],
+      "EffectTag": "AtkUp"
+    },
+    {
+      "Id": 3501,
+      "EffectType": "TileStateChange",
+      "ValueList": [],
+      "EffectTag": "SmokeBombTile"
+    },
+    {
+      "Id": 3502,
+      "EffectType": "TileStateChange",
+      "ValueList": [],
+      "EffectTag": "PoisonTile"
+    },
+    {
+      "Id": 3601,
+      "EffectType": "Trap",
+      "ValueList": [
+        1
+      ],
+      "EffectTag": "SlimeTile"
+    },
+    {
+      "Id": 5001,
+      "EffectType": "MinComboHit",
+      "ValueList": [
+        2
+      ],
+      "EffectTag": "None"
+    },
+    {
+      "Id": 5101,
+      "EffectType": "MinCharacterFind",
+      "ValueList": [
+        1,
+        1
+      ],
+      "EffectTag": "None"
+    }
+  ]
+}
