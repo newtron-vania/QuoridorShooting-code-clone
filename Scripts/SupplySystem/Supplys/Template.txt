@@ -1,0 +1,42 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class ######## : BaseSupply
+{
+    public override int ID => sp_id;
+    public override string Name => sp_name;
+    public override string Description => description;
+    public override SupplyData.SupplyType Type => SupplyData.SupplyType.sp_type;
+    public override SupplyData.SupplyTarget Target => SupplyData.SupplyTarget.sp_target;
+    public override SupplyData.SupplyRank Rank => SupplyData.SupplyRank.sp_grade;
+    public override int DurationRound => durationRound;
+    public override int EffectAmount => effect_amount;
+    public override Sprite Image => null;
+
+    public override void UseSupply()
+    {
+        base.UseSupply();
+        if(DurationRound != 0)
+        {
+            SupplyManager.Instance._saveDurationSupply.Add(this);
+        }
+        Debug.Log($"{Name} 보급품 사용완");
+    }
+
+    public override void TargetHighLight()
+    {
+        base.TargetHighLight();
+    }
+
+    public override bool UpdateSupply()
+    {
+        base.UpdateSupply();
+        return true;
+    }
+
+    public override void InitSupply()
+    {
+        base.InitSupply();
+    }
+}
