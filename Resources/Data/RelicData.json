@@ -1,0 +1,1752 @@
+{
+  "Datas": [
+    {
+      "Id": 1,
+      "Name": "낡은 회중시계",
+      "Description": "가문 대대로 내려오는 오래된 회중시계. 시계의 긁힌 자국에는 절망과 결의가 함께 잠들어 있다.\\nm 라운드 마다, 선구자 타입을 제외한 모든 적 및 아군 캐릭터가 n 라운드 동안 '실명', '속박', '저항불가', '탈진' \\n상태가 된다. ",
+      "Synergy": [
+        "Pathfinder"
+      ],
+      "Rarity": "Legend",
+      "TriggerTypes": [
+        "OnTurnStart"
+      ],
+      "LogicParams": {
+        "Effects": [
+          "Blind",
+          "Bind",
+          "Irresistible",
+          "Exhaust"
+        ],
+        "Duration": 2,
+        "Interval": 5
+      },
+      "TargetFilter": "Enemies",
+      "IconPath": ""
+    },
+    {
+      "Id": 2,
+      "Name": "샹티에르 계약서",
+      "Description": "대륙 최대 화기 생산사의 후계자가 직접 날인한 계약서. 그녀의 야망만큼이나 촘촘한 조항들로 가득하다.\\n전투 승리 시 획득하는 골드가 n% 증가한다.",
+      "Synergy": [
+        "Engineer",
+        "Resources"
+      ],
+      "Rarity": "Unique",
+      "TriggerTypes": [
+        "BattleWin"
+      ],
+      "LogicParams": {
+        "ResourceType": "Gold",
+        "Multiplier": 0.15,
+        "GoldPercent": 0.15
+      },
+      "TargetFilter": "Player",
+      "IconPath": ""
+    },
+    {
+      "Id": 3,
+      "Name": "북방의 해진 성서",
+      "Description": "\"정의는 때로 가장 어두운 곳에서, 가장 작은 빛에 의지해 싹튼다.\"\\n전투 당 1회, 캐릭터의 체력이 k% 이하가 되면, m라운드 동안 피해저항이 n%가 된다. ",
+      "Synergy": [
+        "Tanker",
+        "Protection"
+      ],
+      "Rarity": "Unique",
+      "TriggerTypes": [
+        "HPLessThan"
+      ],
+      "LogicParams": {
+        "Threshold": 0.3,
+        "DamageResist": 1.0,
+        "Duration": 1,
+        "HpThreshold": 0.3
+      },
+      "TargetFilter": "Self",
+      "IconPath": ""
+    },
+    {
+      "Id": 4,
+      "Name": "붉은 두건",
+      "Description": "메리디에스의 기술자들에게 작업용으로 인기가 많은 스카프.\\n전투 시작 시, 모든 아군에게 행동력을 n 부여한다.",
+      "Synergy": [
+        "Engineer"
+      ],
+      "Rarity": "Unique",
+      "TriggerTypes": [
+        "OnFirstTurn"
+      ],
+      "LogicParams": {
+        "ActionPoint": 50
+      },
+      "TargetFilter": "Allies",
+      "IconPath": ""
+    },
+    {
+      "Id": 5,
+      "Name": "메이드의 의례용 장갑",
+      "Description": "어떤 메이드의 긍지가 담긴 새하얀 장갑. 언제나 흠 하나 없이 깨끗하다.\\n전투 시작 시, 첫 m라운드 동안 모든 아군에게 '필중' 효과를 부여하고, 공격력을 n 증가시킨다.",
+      "Synergy": [
+        "Successor"
+      ],
+      "Rarity": "Unique",
+      "TriggerTypes": [
+        "OnFirstTurn"
+      ],
+      "LogicParams": {
+        "Effects": [
+          "GuaranteedHit"
+        ],
+        "Duration": 2,
+        "Attack": 2
+      },
+      "TargetFilter": "Allies",
+      "IconPath": ""
+    },
+    {
+      "Id": 6,
+      "Name": "부러진 금속 조각",
+      "Description": "작은 금속 조각이지만, 누군가에겐 세상 그 어떤 것보다 무겁다.\\n행동력이 최대치일 때, 피해저항 확률이 n% 증가한다.",
+      "Synergy": [
+        "Tanker",
+        "Engineer"
+      ],
+      "Rarity": "Unique",
+      "TriggerTypes": [
+        "APFull"
+      ],
+      "LogicParams": {
+        "DamageResistChance": 0.25
+      },
+      "TargetFilter": "Self",
+      "IconPath": ""
+    },
+    {
+      "Id": 7,
+      "Name": "푸른 댕기",
+      "Description": "머리카락을 묶는 푸른 비단 끈. 고풍스럽게 장식되어 있다.\\n캐릭터가 보유한 이로운 효과 하나당 피해저항이 n%만큼 증가한다. (최대 m%)",
+      "Synergy": [
+        "Tanker",
+        "Protection"
+      ],
+      "Rarity": "Unique",
+      "TriggerTypes": [
+        "Always"
+      ],
+      "LogicParams": {
+        "DamageResist": 0.05,
+        "MaxPercent": 0.15
+      },
+      "TargetFilter": "Self",
+      "IconPath": ""
+    },
+    {
+      "Id": 8,
+      "Name": "성급한 사수의 화살",
+      "Description": "반쯤 타들어간 화살. 차갑고 불길한 옵스큐어가 서려 있다.\\n캐릭터가 보유한 해로운 하나당 공격력이 3씩 증가한다. (최대 n%)",
+      "Synergy": [
+        "Obscure",
+        "Burn"
+      ],
+      "Rarity": "Unique",
+      "TriggerTypes": [
+        "Always"
+      ],
+      "LogicParams": {
+        "Attack": 3,
+        "MaxPercent": 0.15
+      },
+      "TargetFilter": "Self",
+      "IconPath": ""
+    },
+    {
+      "Id": 9,
+      "Name": "젖은 담쟁이잎",
+      "Description": "성서에 끼워두었다가, 그 위에 성수를 쏟아 젖게 된 잎사귀. 늘 촉촉하게 생기가 도는 것이, 그 주인을 떠오르게 한다.\\n아군에게 이로운 효과(버프, 회복)를 부여할 때, 해로운 효과(디버프)를 1개 제거한다.",
+      "Synergy": [
+        "Iridis",
+        "Protection"
+      ],
+      "Rarity": "Unique",
+      "TriggerTypes": [
+        "ActionStart"
+      ],
+      "LogicParams": {},
+      "TargetFilter": "Allies",
+      "IconPath": ""
+    },
+    {
+      "Id": 10,
+      "Name": "미완성 인형 팔",
+      "Description": "르누아 공방에 남겨진 자동인형의 부품. 생명을 불어넣으려 했던 흔적이 남아있다.\\n'기술자' 타입의 아군이 전장에 n명 이상 있을 경우, 모든 아군의 최대 체력이 15% 증가한다.",
+      "Synergy": [
+        "Engineer",
+        "Protection"
+      ],
+      "Rarity": "Unique",
+      "TriggerTypes": [
+        "InLineUp"
+      ],
+      "LogicParams": {
+        "MaxHp": 15,
+        "MaxHpPercent": 0.15,
+        "TargetTag": "Engineer",
+        "MinCount": 1
+      },
+      "TargetFilter": "Allies",
+      "IconPath": ""
+    },
+    {
+      "Id": 11,
+      "Name": "깨진 고글",
+      "Description": "\"유레카! 이 미세한 균열 속에 새로운 우주가 보이는군!\"\\n스킬 사용 시 n% 확률로 행동력을 소모하지 않는다.",
+      "Synergy": [
+        "Supporter"
+      ],
+      "Rarity": "Unique",
+      "TriggerTypes": [
+        "OnSkillUse"
+      ],
+      "LogicParams": {
+        "Chance": 0.25
+      },
+      "TargetFilter": "Self",
+      "IconPath": ""
+    },
+    {
+      "Id": 12,
+      "Name": "은빛 날개 장식",
+      "Description": "\"대신전의 성기사 중에는 천사가 있다네. 신성모독 아니냐고? 예끼.\"\\n피해저항이 성공할 때, 체력이 가장 낮은 아군 1명의 체력을 n 회복시킨다.",
+      "Synergy": [
+        "Tanker",
+        "Protection"
+      ],
+      "Rarity": "Unique",
+      "TriggerTypes": [
+        "ActionStart"
+      ],
+      "LogicParams": {
+        "HealAmount": 3
+      },
+      "TargetFilter": "Allies",
+      "IconPath": ""
+    },
+    {
+      "Id": 13,
+      "Name": "황동 맥주잔(무알콜 전용)",
+      "Description": "술은 마시지 못해도, 분위기만큼은 누구보다 사랑하는 사람을 위한 잔. 애주가에게 인기가 없다.\\n상점에서 n% 할인된 가격으로 구매할 수 있다.",
+      "Synergy": [
+        "Resources"
+      ],
+      "Rarity": "Unique",
+      "TriggerTypes": [
+        "Always"
+      ],
+      "LogicParams": {
+        "DiscountRate": 0.1
+      },
+      "TargetFilter": "Self",
+      "IconPath": ""
+    },
+    {
+      "Id": 14,
+      "Name": "때 묻은 집게",
+      "Description": "손때와 기름때가 묻은 공구. 이 집게의 주인은, 정비는 늘 철저히 해야 한다는 대장장이의 말에 충실했던 모양이다.\\n이전 라운드에서 행동하지 않은 캐릭터의 공격력을 n 증가시킨다.(최대 m)",
+      "Synergy": [
+        "Dealer",
+        "Engineer"
+      ],
+      "Rarity": "Unique",
+      "TriggerTypes": [
+        "ActionStart"
+      ],
+      "LogicParams": {
+        "Attack": 5,
+        "MaxStack": 10
+      },
+      "TargetFilter": "Self",
+      "IconPath": ""
+    },
+    {
+      "Id": 15,
+      "Name": "사막의 챔피언 벨트",
+      "Description": "와흐라트의 격투장에서 수없이 승리하고 얻어낸 증표. 피와 모래의 냄새가 배어있다.\\n적을 처치할 때마다, 최대 체력의 n%만큼 회복한다.",
+      "Synergy": [
+        "Tanker"
+      ],
+      "Rarity": "Unique",
+      "TriggerTypes": [
+        "OnKill"
+      ],
+      "LogicParams": {
+        "HealPercent": 0.1,
+        "MaxHpPercent": 0.1
+      },
+      "TargetFilter": "Enemies",
+      "IconPath": ""
+    },
+    {
+      "Id": 16,
+      "Name": "예언의 안대",
+      "Description": "\"눈을 감아야 비로소 보이는 것들이 있답니다.\"\\n전투 시작 시, 적 전체에게  n라운드 동안 '저항불가' 상태를 부여한다.",
+      "Synergy": [
+        "Supporter",
+        "Weakness"
+      ],
+      "Rarity": "Unique",
+      "TriggerTypes": [
+        "OnFirstTurn"
+      ],
+      "LogicParams": {
+        "Effects": [
+          "Irresistible"
+        ],
+        "Duration": 2
+      },
+      "TargetFilter": "Enemies",
+      "IconPath": ""
+    },
+    {
+      "Id": 17,
+      "Name": "붉은 팔찌",
+      "Description": "강대한 생명력이 느껴지는, 어쩐지 불길한 붉은색 팔찌. 도무지 한 사람의 힘이라고는 느껴지지 않는다.\\n모든 아군의 공격력이 n 증가하지만, 전투 중 체력이 회복되지 않는다.",
+      "Synergy": [
+        "Dealer",
+        "Successor"
+      ],
+      "Rarity": "Unique",
+      "TriggerTypes": [
+        "Always"
+      ],
+      "LogicParams": {
+        "Attack": 10
+      },
+      "TargetFilter": "Allies",
+      "IconPath": ""
+    },
+    {
+      "Id": 18,
+      "Name": "늑대의 부러진 송곳니",
+      "Description": "\"커다란...늑대의 송곳니로 추정. - OO 전투 보고서\"\\n전장에 '각성자' 타입의 아군이 m명 이상일 경우, 모든 아군의 공격력이 n 증가한다.",
+      "Synergy": [
+        "Awakener"
+      ],
+      "Rarity": "Rare",
+      "TriggerTypes": [
+        "InLineUp"
+      ],
+      "LogicParams": {
+        "Attack": 5,
+        "TargetTag": "Awakener",
+        "MinCount": 2
+      },
+      "TargetFilter": "Allies",
+      "IconPath": ""
+    },
+    {
+      "Id": 19,
+      "Name": "키니스의 성수",
+      "Description": "영면 의식에 사용되는 물. 연구자 사이에서 비밀스러운 성분이 들어있다는 소문이 있다.\\n아군의 체력 회복량이 m 증가하지만, 회복된 아군은 k라운드간 공격력이 n 감소한다.",
+      "Synergy": [
+        "Supporter",
+        "Iridis",
+        "Protection"
+      ],
+      "Rarity": "Rare",
+      "TriggerTypes": [
+        "Always"
+      ],
+      "LogicParams": {
+        "Attack": 2,
+        "AttackDecrease": 2,
+        "HealBonus": 5,
+        "Duration": 1
+      },
+      "TargetFilter": "Allies",
+      "IconPath": ""
+    },
+    {
+      "Id": 20,
+      "Name": "갈라진 목판",
+      "Description": "\"하나의 글자를 새기는 것은, 천 개의 사상을 퍼뜨리는 것과 같다.\"\\n전투 시작 시, 가장 이로운 효과가 많은 캐릭터의 버프를 모든 아군에게 n라운드 동안 부여한다.",
+      "Synergy": [
+        "Supporter"
+      ],
+      "Rarity": "Rare",
+      "TriggerTypes": [
+        "OnFirstTurn"
+      ],
+      "LogicParams": {
+        "Duration": 1
+      },
+      "TargetFilter": "Allies",
+      "IconPath": ""
+    },
+    {
+      "Id": 21,
+      "Name": "메리디에스제 기계 심장",
+      "Description": "기술자들의 도시 메리디에스에서 만들어진 인공 동력원. 정밀한 기술력으로 지치지 않는 힘을 공급한다.\\nn라운드마다, 모든 '기술자' 아군의 행동력을 최대치로 회복한다.",
+      "Synergy": [
+        "Supporter",
+        "Engineer"
+      ],
+      "Rarity": "Rare",
+      "TriggerTypes": [
+        "OnTurnStart"
+      ],
+      "LogicParams": {
+        "Interval": 3
+      },
+      "TargetFilter": "Allies",
+      "IconPath": ""
+    },
+    {
+      "Id": 22,
+      "Name": "모르츠카",
+      "Description": "\"이 땅에서 살아남으려면, 반드시 품고 다니라고.\" 북부의 한기를 막아주는 독주.\\n각성자' 아군의 피해저항을 n%만큼 증가시킨다. ",
+      "Synergy": [
+        "Awakener",
+        "Protection"
+      ],
+      "Rarity": "Rare",
+      "TriggerTypes": [
+        "Always"
+      ],
+      "LogicParams": {
+        "DamageResist": 0.15
+      },
+      "TargetFilter": "Allies",
+      "IconPath": ""
+    },
+    {
+      "Id": 23,
+      "Name": "와흐라트의 향로",
+      "Description": "\"카다쉬 코반에 기도를. 거룩한 제단이 당신을 굽어살피실 겁니다.\"\\n'계승자' 아군이 행동을 종료할 때, n% 확률로 행동력이 최대가 된다.",
+      "Synergy": [
+        "Supporter",
+        "Successor"
+      ],
+      "Rarity": "Rare",
+      "TriggerTypes": [
+        "APFull"
+      ],
+      "LogicParams": {
+        "Chance": 0.2
+      },
+      "TargetFilter": "Allies",
+      "IconPath": ""
+    },
+    {
+      "Id": 24,
+      "Name": "센트로폴리스의 분수 동전",
+      "Description": "대륙의 교차로, 센트로폴리스의 중앙 광장 분수에서 건져 올린 낡은 동전. 수많은 사람들의 소원이 담겨 있다.\\n유물 획득 선택지에서 선택지가 1개 더 추가된다.",
+      "Synergy": [
+        "Resources"
+      ],
+      "Rarity": "Rare",
+      "TriggerTypes": [
+        "Always"
+      ],
+      "LogicParams": {
+        "ExtraCount": 1
+      },
+      "TargetFilter": "Self",
+      "IconPath": ""
+    },
+    {
+      "Id": 25,
+      "Name": "고대의 계약서 파편",
+      "Description": "이리디스를 안정시키기 위해 맺었던 고대의 계약서 조각. 희미하지만 강력한 구속의 흔적이 남아있다.\\n모든 아군의 턴당증가행동력이 n 증가하지만, 행동력을 모두 소모하고 턴을 종료하면  5만큼의 피해를 입는다.",
+      "Synergy": [
+        "Supporter",
+        "Iridis"
+      ],
+      "Rarity": "Rare",
+      "TriggerTypes": [
+        "Always"
+      ],
+      "LogicParams": {
+        "ActionPoint": 50
+      },
+      "TargetFilter": "Allies",
+      "IconPath": ""
+    },
+    {
+      "Id": 26,
+      "Name": "'그릇'",
+      "Description": "기술자가 갓 만들어낸, 계승자가 힘을 담지 않은 순수한 증폭 장치. 아직 누구의 이야기도 담기지 않았다.\\n유물을 n개 이상 보유하고 있을 경우, 공격력과, 체력  10% 증가한다.",
+      "Synergy": [
+        "Engineer"
+      ],
+      "Rarity": "Rare",
+      "TriggerTypes": [
+        "OwnArtifact"
+      ],
+      "LogicParams": {
+        "MinCount": 5
+      },
+      "TargetFilter": "Self",
+      "IconPath": ""
+    },
+    {
+      "Id": 27,
+      "Name": "이리디센트",
+      "Description": "순수한 이리디스가 오랜 시간에 걸쳐 굳어진 결정체. 만지면 따스한 온기가 느껴진다.\\n모든 아군의 스킬 피해량이 n% 증가한다.",
+      "Synergy": [
+        "Dealer",
+        "Iridis"
+      ],
+      "Rarity": "Rare",
+      "TriggerTypes": [
+        "Always"
+      ],
+      "LogicParams": {
+        "SkillDamagePercent": 0.1
+      },
+      "TargetFilter": "Allies",
+      "IconPath": ""
+    },
+    {
+      "Id": 28,
+      "Name": "옵스큐어 정수",
+      "Description": "순수한 옵스큐어가 녹아내린 액체. 살아있는 것처럼 꿈틀거린다.\\n체력이 m% 이하인 아군이 주는 모든 피해가 n% 증가한다.",
+      "Synergy": [
+        "Dealer",
+        "Obscure"
+      ],
+      "Rarity": "Rare",
+      "TriggerTypes": [
+        "HPLessThan"
+      ],
+      "LogicParams": {
+        "DamagePercent": 0.2,
+        "Threshold": 0.5,
+        "HpThreshold": 0.5
+      },
+      "TargetFilter": "Allies",
+      "IconPath": ""
+    },
+    {
+      "Id": 29,
+      "Name": "루틸루스 꽃",
+      "Description": "\"피할 수 없는 운명은 붉게 피어난다.\" 루키아의 뿌리에서 자라난 돌연변이 꽃.\\n공격력이 m 증가하는 대신, 최대 체력이 n 감소한다.",
+      "Synergy": [
+        "Dealer",
+        "Obscure"
+      ],
+      "Rarity": "Rare",
+      "TriggerTypes": [
+        "Always"
+      ],
+      "LogicParams": {
+        "Attack": 5,
+        "MaxHpDecrease": 15
+      },
+      "TargetFilter": "Self",
+      "IconPath": ""
+    },
+    {
+      "Id": 30,
+      "Name": "루키아 꽃",
+      "Description": "이그니투스의 기운을 받아 빛을 내는 흰 꽃이다. 북부에서만 발견된다.\\n피해저항이 n%만큼 증가한다.(최대 m%)",
+      "Synergy": [
+        "Protection"
+      ],
+      "Rarity": "Normal",
+      "TriggerTypes": [
+        "Always"
+      ],
+      "LogicParams": {
+        "DamageResist": 0.05,
+        "MaxPercent": 0.2
+      },
+      "TargetFilter": "Self",
+      "IconPath": ""
+    },
+    {
+      "Id": 31,
+      "Name": "샹티에르제 신형 탄창",
+      "Description": "대륙 최대의 화기 생산사 '샹티에르'에서 제작한 최신형 탄창.\\n'딜러' 클래스의 공격력을 2 상승시킨다.(최대 n)",
+      "Synergy": [
+        "Dealer"
+      ],
+      "Rarity": "Normal",
+      "TriggerTypes": [
+        "Always"
+      ],
+      "LogicParams": {
+        "Attack": 2,
+        "MaxStack": 10
+      },
+      "TargetFilter": "Class_Dealer",
+      "IconPath": ""
+    },
+    {
+      "Id": 32,
+      "Name": "북부 암살단의 표식",
+      "Description": "과거 카와가 속했던 암살단이 사용하는 표식. 보는 것만으로도 등골이 서늘해진다.\\n 체력이 100%인 적을 공격할 때, n의 추가 피해를 준다.(최대 m)",
+      "Synergy": [
+        "Dealer"
+      ],
+      "Rarity": "Normal",
+      "TriggerTypes": [
+        "ActionStart"
+      ],
+      "LogicParams": {
+        "BonusDamage": 3,
+        "MaxStack": 15
+      },
+      "TargetFilter": "Enemies",
+      "IconPath": ""
+    },
+    {
+      "Id": 33,
+      "Name": "우중상회 VIP 카드",
+      "Description": "센트로폴리스 '우중상회'의 고객 증표. 소유자에게는 보이지 않는 행운이 따른다고 한다.\\n전투 승리 시, 획득하는 골드가 n% 증가한다.(최대 m%)",
+      "Synergy": [
+        "Resources"
+      ],
+      "Rarity": "Normal",
+      "TriggerTypes": [
+        "BattleWin"
+      ],
+      "LogicParams": {
+        "ResourceType": "Gold",
+        "Multiplier": 0.2,
+        "MaxCap": 1.0,
+        "GoldPercent": 0.2,
+        "MaxPercent": 1.0
+      },
+      "TargetFilter": "Player",
+      "IconPath": ""
+    },
+    {
+      "Id": 34,
+      "Name": "수호자의 낡은 방패",
+      "Description": "이름 없는 수호자가 사용했던 방패. 수많은 공격을 막아낸 흔적이 역력하다.\\n전장의 '탱커' 클래스 아군 하나당 모든 아군의 최대 체력이 15씩 증가한다.",
+      "Synergy": [
+        "Tanker"
+      ],
+      "Rarity": "Normal",
+      "TriggerTypes": [
+        "Always"
+      ],
+      "LogicParams": {
+        "MaxHp": 15
+      },
+      "TargetFilter": "Allies",
+      "IconPath": ""
+    },
+    {
+      "Id": 35,
+      "Name": "척후병의 단검",
+      "Description": "전장에서 가장 먼저 적진에 뛰어드는 척후병들이 선호하는 단검. \\n전장의 '딜러' 클래스 아군 하나당 모든 아군의 공격력이 3씩 증가한다.",
+      "Synergy": [
+        "Dealer"
+      ],
+      "Rarity": "Normal",
+      "TriggerTypes": [
+        "Always"
+      ],
+      "LogicParams": {
+        "Attack": 3
+      },
+      "TargetFilter": "Allies",
+      "IconPath": ""
+    },
+    {
+      "Id": 36,
+      "Name": "견습 사제의 기도서",
+      "Description": "앳된 사제가 사용하던 기도서. 페이지마다 삐뚤빼뚤한 글씨로 동료의 안위를 비는 문구가 적혀있다.\\n전장의 '서포터' 클래스 아군 하나당 모든 아군의 최대 체력이 15씩 증가한다.",
+      "Synergy": [
+        "Supporter"
+      ],
+      "Rarity": "Normal",
+      "TriggerTypes": [
+        "Always"
+      ],
+      "LogicParams": {
+        "MaxHp": 15
+      },
+      "TargetFilter": "Allies",
+      "IconPath": ""
+    },
+    {
+      "Id": 37,
+      "Name": "전술 교본 초판",
+      "Description": "키니스 왕립 사관학교에서 사용하는 교본. 믿음의 중요성을 강조하는 페이지가 유독 닳아있다.\\n전장에 '탱커'가 k명 이상 있을 경우, 전투 시작 시 모든 아군이 m라운드간 피해저항이 n%만큼 증가한다.",
+      "Synergy": [
+        "Tanker"
+      ],
+      "Rarity": "Normal",
+      "TriggerTypes": [
+        "OnFirstTurn"
+      ],
+      "LogicParams": {
+        "DamageResist": 0.1,
+        "Duration": 2,
+        "MinCount": 1
+      },
+      "TargetFilter": "Allies",
+      "IconPath": ""
+    },
+    {
+      "Id": 38,
+      "Name": "약점 분석 보고서",
+      "Description": "용병들 사이에서 공유되는 몬스터의 약점 분석표. 강력한 일격을 위한 정보가 담겨있다.\\n팀에 '딜러'가 n명 이상 있을 경우, 모든 아군이 주는 피해량이 2 증가한다.",
+      "Synergy": [
+        "Dealer"
+      ],
+      "Rarity": "Normal",
+      "TriggerTypes": [
+        "Always"
+      ],
+      "LogicParams": {
+        "MinCount": 1
+      },
+      "TargetFilter": "Allies",
+      "IconPath": ""
+    },
+    {
+      "Id": 39,
+      "Name": "휴대용 축복",
+      "Description": "전장을 누비는 의무병들이 필수적으로 걸고 다니는 목걸이. 부상병을 치료할 때 사용한다.\\n팀에 '서포터'가 m명 이상 있을 경우, 전투 승리 시 모든 아군의 체력이 최대 체력의 n%만큼 회복된다.",
+      "Synergy": [
+        "Supporter"
+      ],
+      "Rarity": "Normal",
+      "TriggerTypes": [
+        "BattleWin"
+      ],
+      "LogicParams": {
+        "HealPercent": 0.05,
+        "MaxHpPercent": 0.05,
+        "MinCount": 1
+      },
+      "TargetFilter": "Allies",
+      "IconPath": ""
+    },
+    {
+      "Id": 40,
+      "Name": "계승자의 첫걸음",
+      "Description": "갓 계약을 마친 계승자가 받는 증표. 이리디스를 다루는 미숙하지만 순수한 의지가 담겨있다.\\n'계승자' 유형의 영웅은 스킬 사용 시 소모되는 행동력이 n% 확률로 절반이 된다.",
+      "Synergy": [
+        "Successor"
+      ],
+      "Rarity": "Normal",
+      "TriggerTypes": [
+        "OnSkillUse"
+      ],
+      "LogicParams": {
+        "Chance": 0.1
+      },
+      "TargetFilter": "Type_Successor",
+      "IconPath": ""
+    },
+    {
+      "Id": 41,
+      "Name": "각성자의 족쇄",
+      "Description": "스스로를 통제할 목적으로 각성자들이 차고 다니는 무거운 팔찌. 감정의 폭주를 억누르는 역할을 한다.\\n '각성자' 유형의 영웅은 자신의 체력이 n% 이하일 때, 주는 피해량이 10% 증가한다.",
+      "Synergy": [
+        "Awakener"
+      ],
+      "Rarity": "Normal",
+      "TriggerTypes": [
+        "HPLessThan"
+      ],
+      "LogicParams": {
+        "Threshold": 0.5,
+        "HpThreshold": 0.5
+      },
+      "TargetFilter": "Type_Awakener",
+      "IconPath": ""
+    },
+    {
+      "Id": 42,
+      "Name": "기술자의 제도용 연필",
+      "Description": "메리디에스의 기술자들이 사용하는 연필. 설계와 계산에 최적화된 필기감을 자랑한다.\\n '기술자' 유형의 영웅은 전투 시작 시, 최대 체력의 n%를 회복한다.",
+      "Synergy": [
+        "Engineer"
+      ],
+      "Rarity": "Normal",
+      "TriggerTypes": [
+        "OnFirstTurn"
+      ],
+      "LogicParams": {
+        "HealPercent": 0.1,
+        "MaxHpPercent": 0.1
+      },
+      "TargetFilter": "Type_Engineer",
+      "IconPath": ""
+    },
+    {
+      "Id": 43,
+      "Name": "이리디스 반지",
+      "Description": "이리디스 결정의 작은 파편을 머금은 반지. 순수한 에너지가 주변의 동료를 보호한다.\\n전장의 모든 계승자의 피해저항 확률이 n% 증가한다.",
+      "Synergy": [
+        "Iridis"
+      ],
+      "Rarity": "Normal",
+      "TriggerTypes": [
+        "Always"
+      ],
+      "LogicParams": {
+        "DamageResistChance": 0.05
+      },
+      "TargetFilter": "Self",
+      "IconPath": ""
+    },
+    {
+      "Id": 44,
+      "Name": "옵스큐어 채찍",
+      "Description": "어떤 각성자가 각성하면서 내뿜은 강력한 옵스큐어가 깃든 채찍. 위태롭지만 유용한 힘을 품고 있다.\\n전장의 모든 각성자의 공격력이 n 증가한다.",
+      "Synergy": [
+        "Obscure"
+      ],
+      "Rarity": "Normal",
+      "TriggerTypes": [
+        "Always"
+      ],
+      "LogicParams": {
+        "Attack": 5
+      },
+      "TargetFilter": "Self",
+      "IconPath": ""
+    },
+    {
+      "Id": 45,
+      "Name": "고장 난 부품",
+      "Description": "\"실패는 발명의 어머니다. 적어도, 다음엔 더 튼튼하게 만들 수 있겠지.\"\\n전장의 모든 기술자의 최대 체력이 n 증가한다.",
+      "Synergy": [
+        "Engineer"
+      ],
+      "Rarity": "Normal",
+      "TriggerTypes": [
+        "Always"
+      ],
+      "LogicParams": {
+        "MaxHp": 10
+      },
+      "TargetFilter": "Enemies",
+      "IconPath": ""
+    },
+    {
+      "Id": 46,
+      "Name": "닳아빠진 가죽 갑옷",
+      "Description": "낡고 헤진 가죽 갑옷. 다른 가죽을 덧데어 꿰맨 흔적도 보인다.\\n모든 아군의 최대 체력이 n 증가한다.",
+      "Synergy": [
+        "Protection"
+      ],
+      "Rarity": "Normal",
+      "TriggerTypes": [
+        "Always"
+      ],
+      "LogicParams": {
+        "MaxHp": 5
+      },
+      "TargetFilter": "Allies",
+      "IconPath": ""
+    },
+    {
+      "Id": 47,
+      "Name": "녹슨 단검",
+      "Description": "조금 무딘 날에 녹이 슬어 있는 단검. 맨손으로 적을 상대하는 것보다 조금 나은 수준이다.\\n모든 아군의 공격력이 n 증가한다.",
+      "Synergy": [
+        "Dealer"
+      ],
+      "Rarity": "Normal",
+      "TriggerTypes": [
+        "Always"
+      ],
+      "LogicParams": {
+        "Attack": 2
+      },
+      "TargetFilter": "Allies",
+      "IconPath": ""
+    },
+    {
+      "Id": 48,
+      "Name": "숫돌",
+      "Description": "꾸준하고 정성스러운 무기 관리는 전투력의 기본이다.\\nn라운드마다 모든 아군의 공격력이 1씩 영구적으로 증가한다. (전투 종료 시 초기화)",
+      "Synergy": [
+        "Dealer"
+      ],
+      "Rarity": "Normal",
+      "TriggerTypes": [
+        "OnTurnStart"
+      ],
+      "LogicParams": {
+        "Attack": 1,
+        "Interval": 2
+      },
+      "TargetFilter": "Allies",
+      "IconPath": ""
+    },
+    {
+      "Id": 49,
+      "Name": "두툼한 지갑",
+      "Description": "\"돈으로 해결할 수 없는 문제가 있다면, 돈이 부족하지는 않았는지 생각해 봐.\"\\n전투 시작 시, n골드를 획득한다.",
+      "Synergy": [
+        "Resources"
+      ],
+      "Rarity": "Normal",
+      "TriggerTypes": [
+        "OnFirstTurn"
+      ],
+      "LogicParams": {
+        "ResourceType": "Gold",
+        "Gold": 5
+      },
+      "TargetFilter": "Player",
+      "IconPath": ""
+    },
+    {
+      "Id": 50,
+      "Name": "정화의 향초",
+      "Description": "한적한 마을의 치료사가 사용하는 향초. 은은한 향이 정신을 맑게 한다.\\n전투 시작 시, 모든 아군의 해로운 효과(디버프)를 1개 제거한다.(1회용)",
+      "Synergy": [
+        "Supporter"
+      ],
+      "Rarity": "Normal",
+      "TriggerTypes": [
+        "OnFirstTurn"
+      ],
+      "LogicParams": {
+        "RemoveCount": 1
+      },
+      "TargetFilter": "Allies",
+      "IconPath": ""
+    },
+    {
+      "Id": 51,
+      "Name": "용병의 비상식량",
+      "Description": "용병들이 허리춤에 차고 다니는 딱딱한 건빵. 맛은 없지만, 위급할 때 큰 힘이 된다.\\n전투 중 체력이 m% 이하로 처음 떨어졌을 때, 즉시 최대 체력의 n%를 회복한다.(1회용)",
+      "Synergy": [
+        "Protection"
+      ],
+      "Rarity": "Normal",
+      "TriggerTypes": [
+        "HPLessThan"
+      ],
+      "LogicParams": {
+        "HealPercent": 0.1,
+        "Threshold": 0.25,
+        "MaxHpPercent": 0.1,
+        "HpThreshold": 0.25
+      },
+      "TargetFilter": "Self",
+      "IconPath": ""
+    },
+    {
+      "Id": 52,
+      "Name": "행운의 네잎클로버",
+      "Description": "\"이걸 찾는다고 강해지는 건 아니지만... 기분은 좋잖아?\"\\n전투 종료 시, n% 확률로 무작위 보급품 1개를 획득한다.(1회용)",
+      "Synergy": [
+        "Resources"
+      ],
+      "Rarity": "Normal",
+      "TriggerTypes": [
+        "Always"
+      ],
+      "LogicParams": {
+        "Chance": 0.1
+      },
+      "TargetFilter": "Self",
+      "IconPath": ""
+    },
+    {
+      "Id": 53,
+      "Name": "무너지지 않는 왕관",
+      "Description": "전장을 누비며 승리를 이끌었던 왕의 왕관. 어떤 공격에도 결코 쓰러지지 않는 빛으로 반짝인다.\\n탱커 클래스 캐릭터의 최대 체력을 [보유한 시너지 태그 '탱커'의 유물 숫자]*2 만큼 증가시킨다.",
+      "Synergy": [
+        "Tanker"
+      ],
+      "Rarity": "Legend",
+      "TriggerTypes": [
+        "Always"
+      ],
+      "LogicParams": {
+        "ScalingTag": "Tanker",
+        "StatType": "MaxHp",
+        "Multiplier": 2
+      },
+      "TargetFilter": "Class_Tanker",
+      "IconPath": ""
+    },
+    {
+      "Id": 54,
+      "Name": "영원히 벼려지는 검",
+      "Description": "베면 벨수록 무뎌지지 않고 날카로워지는 검.\\n딜러 클래스 캐릭터의 공격력을 [보유한 시너지 태그 '딜러'의 유물 숫자] 만큼 증가시킨다.",
+      "Synergy": [
+        "Dealer"
+      ],
+      "Rarity": "Legend",
+      "TriggerTypes": [
+        "Always"
+      ],
+      "LogicParams": {
+        "ScalingTag": "Dealer",
+        "StatType": "Attack"
+      },
+      "TargetFilter": "Class_Dealer",
+      "IconPath": ""
+    },
+    {
+      "Id": 55,
+      "Name": "공명의 종",
+      "Description": "사람의 마음을 편하게 해주는 울림을 가진 종. 원리를 알 수 없지만, 전설 속에서 많은 분쟁을 멈췄다.\\n모든 캐릭터의 피해저항을 ([보유한 시너지 태그 '서포터'의 유물 숫자]*5)%p 만큼 증가시킨다.",
+      "Synergy": [
+        "Supporter"
+      ],
+      "Rarity": "Legend",
+      "TriggerTypes": [
+        "Always"
+      ],
+      "LogicParams": {
+        "ScalingTag": "Supporter",
+        "StatType": "DamageResist",
+        "Multiplier": 5
+      },
+      "TargetFilter": "AllUnits",
+      "IconPath": ""
+    },
+    {
+      "Id": 56,
+      "Name": "불새의 눈물",
+      "Description": "이그니투스를 선망하여 몸을 불사른 거대한 새가 죽을 때 떨어졌다고 전해지는 보석. 광적인 열망이 느껴진다.\\n계승자 캐릭터는 턴 종료시 [보유한 시너지 태그 '계승자'의 유물 숫자]만큼 체력을 회복한다.",
+      "Synergy": [
+        "Successor"
+      ],
+      "Rarity": "Legend",
+      "TriggerTypes": [
+        "OnTurnEnd"
+      ],
+      "LogicParams": {
+        "ScalingTag": "Successor",
+        "StatType": "MaxHp"
+      },
+      "TargetFilter": "Type_Successor",
+      "IconPath": ""
+    },
+    {
+      "Id": 57,
+      "Name": "보름달 스튜",
+      "Description": "가장 높은 산의 정상에서만 자란다는 전설 속 황금 유칼립투스 나무의 뿌리로 끓여낸 스튜. 몸이 믿을수 없을 만큼 가벼워진다.\\n각성자 캐릭터는 게임 시작 후 [보유한 시너지 태그 '각성자'의 유물 숫자]턴 만큼 피해저항이 n%p 증가한다.",
+      "Synergy": [
+        "Awakener"
+      ],
+      "Rarity": "Legend",
+      "TriggerTypes": [
+        "OnTurnStart"
+      ],
+      "LogicParams": {
+        "ScalingTag": "Awakener",
+        "StatType": "DamageResist",
+        "DamageResist": 0.5
+      },
+      "TargetFilter": "Type_Awakener",
+      "IconPath": ""
+    },
+    {
+      "Id": 58,
+      "Name": "폭주하는 엔진",
+      "Description": "누구도 이 엔진의 넘치는 힘을 주체할 수 없다. 이 엔진을 만들고 다루는 기술자는 사실 주체할 생각도 없어 보인다.\\n기술자 캐릭터의 공격이 ([보유한 시너지 태그 '기술자'의 유물 숫자]*15)%로 한번 더 공격한다.",
+      "Synergy": [
+        "Engineer"
+      ],
+      "Rarity": "Legend",
+      "TriggerTypes": [
+        "ActionStart"
+      ],
+      "LogicParams": {
+        "ScalingTag": "Engineer",
+        "Multiplier": 15
+      },
+      "TargetFilter": "Type_Engineer",
+      "IconPath": ""
+    },
+    {
+      "Id": 59,
+      "Name": "이그니투스의 옛 둥지",
+      "Description": "이그니투스가 머물렀다고 전해지는 둥지. 느껴보지 못 한 수준의 이리디스가 느껴지고, 태양이 뜬 듯 따스해진다.\\n모든 아군 캐릭터의 체력이\\n([보유한 시너지 태그 '이리디스'의 유물 숫자]-[보유한 시너지 태그 '옵스큐어'의 유물 숫자])*2만큼 증감한다.",
+      "Synergy": [
+        "Iridis"
+      ],
+      "Rarity": "Legend",
+      "TriggerTypes": [
+        "Always"
+      ],
+      "LogicParams": {
+        "ScalingTag": "Iridis",
+        "StatType": "MaxHp",
+        "Multiplier": 2
+      },
+      "TargetFilter": "Allies",
+      "IconPath": ""
+    },
+    {
+      "Id": 60,
+      "Name": "녹스의 발자국",
+      "Description": "녹스가 발을 세차게 굴렀을 때 생겼다고 하는 발자국. 마치 블랙홀과 같이 근처의 빛은 흡수되고 생명력은 사그라든다.\\n모든 아군 캐릭터의 공격력이 \\n([보유한 시너지 태그 '옵스큐어'의 유물 숫자]-[보유한 시너지 태그 '이리디스'의 유물 숫자])*2만큼 증감한다.",
+      "Synergy": [
+        "Obscure"
+      ],
+      "Rarity": "Legend",
+      "TriggerTypes": [
+        "Always"
+      ],
+      "LogicParams": {
+        "ScalingTag": "Iridis",
+        "StatType": "Attack",
+        "Multiplier": 2
+      },
+      "TargetFilter": "Allies",
+      "IconPath": ""
+    },
+    {
+      "Id": 61,
+      "Name": "영겁의 불",
+      "Description": "영원히 타오르는 불꽃. 무엇이 이 불을 타게 하는지는 밝혀진 바가 없다.\\n아군이 입히는 화상 데미지를 [보유한 시너지 태그 '화상'의 유물 숫자]로 변경한다.",
+      "Synergy": [
+        "Burn"
+      ],
+      "Rarity": "Legend",
+      "TriggerTypes": [
+        "Always"
+      ],
+      "LogicParams": {
+        "ScalingTag": "Burn"
+      },
+      "TargetFilter": "Allies",
+      "IconPath": ""
+    },
+    {
+      "Id": 62,
+      "Name": "역병의 얼굴",
+      "Description": "매혹적인 미소를 그리고 있는 가면의 이면에는, 세상에 충격을 빠뜨릴 전염병의 기원이 있다.\\n적이 독 데미지를 입을때마다 해당 적을 제외한 모든 적에게 [보유한 시너지 태그 '독'의 유물 숫자]만큼 피해를 준다.",
+      "Synergy": [
+        "Poison"
+      ],
+      "Rarity": "Legend",
+      "TriggerTypes": [
+        "OnFirstTurn"
+      ],
+      "LogicParams": {
+        "ScalingTag": "Poison"
+      },
+      "TargetFilter": "Enemies",
+      "IconPath": ""
+    },
+    {
+      "Id": 63,
+      "Name": "얼어붙은 소나무",
+      "Description": "\"혹독한 겨울에도 푸름을 잃지 않는 나무를 보았는가.\"\\n모든 아군 캐릭터는 빙결 상태가 되면 데미지를 입지 않고\\n매 턴 [보유한 시너지 태그 '빙결'의 유물 숫자]만큼 체력을 회복한다.",
+      "Synergy": [
+        "Frozen"
+      ],
+      "Rarity": "Legend",
+      "TriggerTypes": [
+        "OnStatusApplied"
+      ],
+      "LogicParams": {
+        "ScalingTag": "Frozen"
+      },
+      "TargetFilter": "Allies",
+      "IconPath": ""
+    },
+    {
+      "Id": 64,
+      "Name": "멸망의 서",
+      "Description": "이 책을 읽은 자에게 정신이 무너지는 저주를 내린다는 멸망의 서. 과거 어느 나라에서 적국을 빠르게 무너뜨리기 위해 의도적으로 만들었다는 소문이 있다.\\n적 캐릭터에게 부여되는 모든 '쇠약',저항불가'의 효과 지속기간이\\n[보유한 시너지 태그 '약화'의 유물 숫자]라운드로 변경된다.",
+      "Synergy": [
+        "Weakness"
+      ],
+      "Rarity": "Legend",
+      "TriggerTypes": [
+        "Always"
+      ],
+      "LogicParams": {
+        "ScalingTag": "Weakness"
+      },
+      "TargetFilter": "Enemies",
+      "IconPath": ""
+    },
+    {
+      "Id": 65,
+      "Name": "고대 뿔 피리",
+      "Description": "먼 옛날 전쟁을 승리로 이끌던 뿔 피리. 웅장한 소리가 난다.\\n이번 라운드에 공격을 하지 않은 캐릭터는 ([보유한 시너지 태그 '보호'의 유물 숫자]*0.05)만큼 피해저항이 증가한다.",
+      "Synergy": [
+        "Protection"
+      ],
+      "Rarity": "Legend",
+      "TriggerTypes": [
+        "ActionStart"
+      ],
+      "LogicParams": {
+        "ScalingTag": "Protection",
+        "StatType": "DamageResist",
+        "Multiplier": 0
+      },
+      "TargetFilter": "Self",
+      "IconPath": ""
+    },
+    {
+      "Id": 66,
+      "Name": "부의 원천",
+      "Description": "열리지 않는 보물상자. 점점 무거워지는 것 같다.\\n매 스테이지 종료시 [보유한 시너지 태그 '자원'의 유물 숫자]*10만큼 추가 골드를 받는다.",
+      "Synergy": [
+        "Resources"
+      ],
+      "Rarity": "Legend",
+      "TriggerTypes": [
+        "Always"
+      ],
+      "LogicParams": {
+        "ScalingTag": "Resources",
+        "ResourceType": "Gold",
+        "Multiplier": 10
+      },
+      "TargetFilter": "Player",
+      "IconPath": ""
+    },
+    {
+      "Id": 67,
+      "Name": "욕심 많은 황금 동상",
+      "Description": "기분 나쁘게 웃고 있는 황금 동상. 재물운을 대가로 불행을 가져올 듯하다.\\n모든 적의 최대 체력을 [보유한 시너지 태크 '자원'의 유물 숫자]*3만큼 증가시킨다. 게임 종료시 \\n[이 유물을 장착한 채로 클리어한 스테이지]*[보유한 시너지 태크 '자원'의 유물 숫자]만큼의\\n별의파편을 추가로 받는다.",
+      "Synergy": [
+        "Resources"
+      ],
+      "Rarity": "Legend",
+      "TriggerTypes": [
+        "OwnArtifact"
+      ],
+      "LogicParams": {},
+      "TargetFilter": "Enemies",
+      "IconPath": ""
+    },
+    {
+      "Id": 68,
+      "Name": "거인 격살자",
+      "Description": "거대한 적일수록 더 강해지는, 강대한 악을 쓰러뜨리기 위해 만들어진 대형 양날 도끼.\\n각성자 캐릭터가 보스 타입의 적에 입히는 피해가\\n[보유한 시너지 태그 '딜러'의 유물 숫자]+[보유한 시너지 태그 '각성자'의 유물 숫자]만큼 증가한다.",
+      "Synergy": [
+        "Dealer",
+        "Awakener"
+      ],
+      "Rarity": "Legend",
+      "TriggerTypes": [
+        "Always"
+      ],
+      "LogicParams": {
+        "ScalingTag": "Dealer"
+      },
+      "TargetFilter": "Class_Dealer",
+      "IconPath": ""
+    },
+    {
+      "Id": 69,
+      "Name": "보복의 방패",
+      "Description": "그 자체로 살아 있다는 전설이 있는 방패. 고통을 기록하고, 끝내 적에게 돌려준다.\\n계승자 캐릭터가 공격받으면 받은 피해의\\n([보유한 시너지 태그 '탱커'의 유물 숫자]*[보유한 시너지 태그 '계승자'의 유물 숫자]*3)%만큼 반사한다.",
+      "Synergy": [
+        "Tanker",
+        "Successor"
+      ],
+      "Rarity": "Legend",
+      "TriggerTypes": [
+        "OnDamaged"
+      ],
+      "LogicParams": {
+        "ScalingTag": "Tanker",
+        "Multiplier": 3
+      },
+      "TargetFilter": "Class_Tanker",
+      "IconPath": ""
+    },
+    {
+      "Id": 70,
+      "Name": "과열 코어",
+      "Description": "터질 것처럼 과열된 동력 코어. 임계치를 넘긴 열이 회로를 점화해, 적을 태우는 파괴적 에너지가 된다.\\n기술자 캐릭터가 공격하면 ([보유한 시너지 태그 '화상'의 숫자]*10)%의 확률로\\n[보유한 시너지 태그 '기술자'의 숫자]라운드 만큼 피해 n를 입는 화상 상태로 만든다.",
+      "Synergy": [
+        "Engineer",
+        "Burn"
+      ],
+      "Rarity": "Legend",
+      "TriggerTypes": [
+        "HitSuccess"
+      ],
+      "LogicParams": {
+        "Effects": [
+          "Burn"
+        ],
+        "Damage": 2
+      },
+      "TargetFilter": "Type_Engineer",
+      "IconPath": ""
+    },
+    {
+      "Id": 71,
+      "Name": "절규하는 갑옷",
+      "Description": "옵스큐어가 깃든 갑옷. 착용자에게 절규하는 영혼의 목소리가 들려온다.\\n탱커 캐릭터의 최대 체력을 n 감소시킨다. 탱커 캐릭터의 체력이 3 이하일때\\n([보유한 시너지 태그 '옵스큐어'의 유물 숫자]-[보유한 시너지 태그 '이리디스'의 유물 숫자])*3 만큼 공격력을 증감시킨다.",
+      "Synergy": [
+        "Tanker",
+        "Obscure"
+      ],
+      "Rarity": "Legend",
+      "TriggerTypes": [
+        "HPLessThan"
+      ],
+      "LogicParams": {
+        "ScalingTag": "Iridis",
+        "StatType": "Attack",
+        "Multiplier": 3,
+        "MaxHpDecrease": 7
+      },
+      "TargetFilter": "Class_Tanker",
+      "IconPath": ""
+    },
+    {
+      "Id": 72,
+      "Name": "황금 잔",
+      "Description": "이예프 외곽의 '노발루크' 산에서 채굴한 황금으로 만든 잔. 따뜻한 물을 담아도 차가운 한기를 내뿜는다.\\n아군 캐릭터 공격시 10%의 확률로 적에게 n라운드동안 피해 1을 주는 '중독'상태로 만들고,\\n아군 캐릭터 피격시 5%의 확률로 적을 1라운드 동안 '저항불가' 상태로 만든다.",
+      "Synergy": [
+        "Poison",
+        "Weakness"
+      ],
+      "Rarity": "Rare",
+      "TriggerTypes": [
+        "HitSuccess"
+      ],
+      "LogicParams": {
+        "Effects": [
+          "Irresistible",
+          "Poison"
+        ],
+        "Duration": 1
+      },
+      "TargetFilter": "Allies",
+      "IconPath": ""
+    },
+    {
+      "Id": 73,
+      "Name": "야수의 방패",
+      "Description": "나무 방패에 짐승의 가죽을 덧댄 방패. 평범한 방패와는 다른 기운을 뿜어낸다.\\n각성자 타입 탱커 클래스 캐릭터가 피격시 공격한 적을 n라운드 동안 '저항불가' 상태로 만든다.",
+      "Synergy": [
+        "Tanker",
+        "Awakener",
+        "Weakness"
+      ],
+      "Rarity": "Unique",
+      "TriggerTypes": [
+        "OnDamaged"
+      ],
+      "LogicParams": {
+        "Effects": [
+          "Irresistible"
+        ],
+        "Duration": 1
+      },
+      "TargetFilter": "Class_Tanker",
+      "IconPath": ""
+    },
+    {
+      "Id": 74,
+      "Name": "청동 스카라브",
+      "Description": "청동으로 만들어진 풍뎅이 모형. 와흐라트 옛 왕의 무덤에서 도굴된 것으로, 강력한 저주를 품은 것 같다.\\n아군 캐릭터가 '중독' 피해를 입으면 랜덤한 적 1명도 함께 데미지를 입는다. ",
+      "Synergy": [
+        "Poison"
+      ],
+      "Rarity": "Unique",
+      "TriggerTypes": [
+        "ActionStart"
+      ],
+      "LogicParams": {
+        "Effects": [
+          "Poison"
+        ]
+      },
+      "TargetFilter": "Allies",
+      "IconPath": ""
+    },
+    {
+      "Id": 75,
+      "Name": "철제 열쇠",
+      "Description": "\"때로는 평범한 물건이 예상치 못한 힘을 가져온다고 하지.\"\\n팀의 모든 각성자 캐릭터는 첫 n라운드 동안 어떤 피해도 입지 않는다.",
+      "Synergy": [
+        "Awakener"
+      ],
+      "Rarity": "Normal",
+      "TriggerTypes": [
+        "OnTurnStart"
+      ],
+      "LogicParams": {
+        "Duration": 1
+      },
+      "TargetFilter": "Type_Awakener",
+      "IconPath": ""
+    },
+    {
+      "Id": 76,
+      "Name": "자동 깃펜",
+      "Description": "잉크가 묻어 있는 평범한 자동 깃펜. 지정된 주문을 스스로 적어 발동시키는 기능을 가지고 있다.\\n서포터 캐릭터의 첫 공격은 '필중'한다.",
+      "Synergy": [
+        "Supporter"
+      ],
+      "Rarity": "Normal",
+      "TriggerTypes": [
+        "ActionStart"
+      ],
+      "LogicParams": {
+        "Effects": [
+          "GuaranteedHit"
+        ]
+      },
+      "TargetFilter": "Class_Supporter",
+      "IconPath": ""
+    },
+    {
+      "Id": 77,
+      "Name": "여행자의 배낭",
+      "Description": "여행자들이 선호하는, 실용성을 갖춘 배낭. 유랑 생활에 필요한 휴대용 물품이 들어 있다.\\n각성자 캐릭터의 피해저항이 0.05 증가한다.",
+      "Synergy": [
+        "Awakener"
+      ],
+      "Rarity": "Normal",
+      "TriggerTypes": [
+        "Always"
+      ],
+      "LogicParams": {},
+      "TargetFilter": "Type_Awakener",
+      "IconPath": ""
+    },
+    {
+      "Id": 78,
+      "Name": "매 가면",
+      "Description": "뛰어난 계승자였던 매 '비람'의 두개골로 만든 가면. 후대 계승자에게 보탬이 되는 것을 기꺼이 여겼다고 전해진다.\\n계승자 캐릭터가 피격시 공격한 적에게 m% 확률로 n라운드 동안 '빙결' 상태를 부여한다.",
+      "Synergy": [
+        "Successor",
+        "Frozen"
+      ],
+      "Rarity": "Rare",
+      "TriggerTypes": [
+        "OnDamaged"
+      ],
+      "LogicParams": {
+        "Effects": [
+          "Frozen"
+        ],
+        "Duration": 1,
+        "Chance": 0.2
+      },
+      "TargetFilter": "Type_Successor",
+      "IconPath": ""
+    },
+    {
+      "Id": 79,
+      "Name": "베로나트",
+      "Description": "심판의 불꽃이라 불리는 오래된 목걸이. 타오르는 불꽃에 숨결을 불어넣는다고 한다.\\n적이 '화상' 상태가 될 때,  '저항불가' 상태를 함께 받는다.",
+      "Synergy": [
+        "Burn",
+        "Weakness"
+      ],
+      "Rarity": "Rare",
+      "TriggerTypes": [
+        "OnStatusApplied"
+      ],
+      "LogicParams": {
+        "Effects": [
+          "Irresistible",
+          "Burn"
+        ]
+      },
+      "TargetFilter": "Enemies",
+      "IconPath": ""
+    },
+    {
+      "Id": 80,
+      "Name": "곰방대",
+      "Description": "청효의 애연가가 가지고 있던 소장품. 정교하게 새겨진 무늬와 최고급 술이 눈에 띈다.\\n각성자 캐릭터는 '중독' 상태일때 '가속' 상태가 된다.",
+      "Synergy": [
+        "Awakener",
+        "Poison"
+      ],
+      "Rarity": "Rare",
+      "TriggerTypes": [
+        "ActionStart"
+      ],
+      "LogicParams": {
+        "Effects": [
+          "Accelerate",
+          "Poison"
+        ]
+      },
+      "TargetFilter": "Type_Awakener",
+      "IconPath": ""
+    },
+    {
+      "Id": 81,
+      "Name": "백색 투구",
+      "Description": "\"가장 큰 재능은 평범함을 잃지 않는 것이다.\"\\n각성자 캐릭터가 공격시 m% 확률로 적을 n라운드 동안 '실명' 상태로 만든다.",
+      "Synergy": [
+        "Awakener",
+        "Weakness"
+      ],
+      "Rarity": "Unique",
+      "TriggerTypes": [
+        "HitSuccess"
+      ],
+      "LogicParams": {
+        "Effects": [
+          "Blind"
+        ],
+        "Duration": 1,
+        "Chance": 0.1
+      },
+      "TargetFilter": "Type_Awakener",
+      "IconPath": ""
+    },
+    {
+      "Id": 82,
+      "Name": "청정의 조화",
+      "Description": "\"꽃은 어떻게 피어날지에 대해서 걱정하지 않는다.\"\\n계승자 캐릭터가 '빙결' 상태가 되면 즉시 해제되고, [빙결 라운드]만큼 피해를 입는다.",
+      "Synergy": [
+        "Successor",
+        "Frozen"
+      ],
+      "Rarity": "Unique",
+      "TriggerTypes": [
+        "OnStatusApplied"
+      ],
+      "LogicParams": {
+        "Effects": [
+          "Frozen"
+        ]
+      },
+      "TargetFilter": "Type_Successor",
+      "IconPath": ""
+    },
+    {
+      "Id": 83,
+      "Name": "무용수의 장식",
+      "Description": "키니스 출신이었던 유명한 무용수의 유품. 그녀는 공연 마지막까지 지치지 않는 체력으로 유명했다.\\n각성자 캐릭터가 '실명', '탈진', '쇠약', 저항불가' 상태가 될 때, 게임 당 1회 즉시 '정화' 상태가 된다.",
+      "Synergy": [
+        "Awakener",
+        "Weakness"
+      ],
+      "Rarity": "Rare",
+      "TriggerTypes": [
+        "OnStatusApplied"
+      ],
+      "LogicParams": {
+        "Effects": [
+          "Blind",
+          "Irresistible",
+          "Exhaust",
+          "Weaken",
+          "Cleanse"
+        ]
+      },
+      "TargetFilter": "Type_Awakener",
+      "IconPath": ""
+    },
+    {
+      "Id": 84,
+      "Name": "낡은 붕대",
+      "Description": "주인은 어디로 갔는지 알 수 없는 낡은 붕대. 사라진 주인의 길고 고단한 여정이 물씬 느껴진다.\\n서포터 캐릭터의 최대 체력이 n 증가한다.",
+      "Synergy": [
+        "Supporter"
+      ],
+      "Rarity": "Normal",
+      "TriggerTypes": [
+        "Always"
+      ],
+      "LogicParams": {
+        "MaxHp": 1
+      },
+      "TargetFilter": "Class_Supporter",
+      "IconPath": ""
+    },
+    {
+      "Id": 85,
+      "Name": "떠돌이 말의 편자",
+      "Description": "대륙 곳곳을 자유롭게 누볐던 한 떠돌이 말의 발굽. 사용감이 있지만 메리디에스 특유의 뛰어난 기술력이 드러난다.\\n계승자 캐릭터의 피해저항이 0.03 증가한다.",
+      "Synergy": [
+        "Successor"
+      ],
+      "Rarity": "Normal",
+      "TriggerTypes": [
+        "Always"
+      ],
+      "LogicParams": {},
+      "TargetFilter": "Type_Successor",
+      "IconPath": ""
+    },
+    {
+      "Id": 86,
+      "Name": "불타는 수레",
+      "Description": "물건 대신 불을 싣고 다니는 작은 짐마차. 불타고 있지 않더라도 큰 물건을 싣기에는 힘들 것 같다.\\n'화상' 태그가 붙은 유물을 얻을 때 모든 캐릭터의 피해저항이 0.01씩 증가한다.",
+      "Synergy": [
+        "Burn",
+        "Resources"
+      ],
+      "Rarity": "Rare",
+      "TriggerTypes": [
+        "Always"
+      ],
+      "LogicParams": {
+        "Effects": [
+          "Burn"
+        ]
+      },
+      "TargetFilter": "AllUnits",
+      "IconPath": ""
+    },
+    {
+      "Id": 87,
+      "Name": "크로우 파우더",
+      "Description": "목숨을 빼앗아가는 극독. 신기하게도 까마귀에게는 통하지 않아 이런 이름이 붙었다고 한다.\\n스테이지에서 첫 공격에 피격된 적은 m 라운드 동안 n 피해를 입는 '중독', '실명' 상태가 된다.",
+      "Synergy": [
+        "Poison",
+        "Weakness"
+      ],
+      "Rarity": "Rare",
+      "TriggerTypes": [
+        "ActionStart"
+      ],
+      "LogicParams": {
+        "Effects": [
+          "Blind",
+          "Poison"
+        ],
+        "Duration": 2,
+        "Damage": 2
+      },
+      "TargetFilter": "Enemies",
+      "IconPath": ""
+    },
+    {
+      "Id": 88,
+      "Name": "푸른 고드름",
+      "Description": "믿기지 않을 정도로 깊고 푸른색을 가진 고드름. 쉬지 않고 한기를 뿜어내지만 절대 녹지 않는다.\\n엘리트 타일 진입시, 첫 턴에 모든 적을 n라운드 동안 '빙결' 상태로 만든다.",
+      "Synergy": [
+        "Frozen",
+        "Weakness"
+      ],
+      "Rarity": "Rare",
+      "TriggerTypes": [
+        "OnTurnStart"
+      ],
+      "LogicParams": {
+        "Effects": [
+          "Frozen"
+        ],
+        "Duration": 1
+      },
+      "TargetFilter": "Enemies",
+      "IconPath": ""
+    },
+    {
+      "Id": 89,
+      "Name": "광산의 횃불",
+      "Description": "심한 그을림과 녹으로 금방 교체해야 할 것 같은 횃불. 그러나 어둠이 찾아오면, 그 어떤 것도 대신할 수 없는 유일한 이정표가 된다\\n아군 캐릭터가 '실명' 상태가 되면, 랜덤한 적 1명이 m 라운드 동안 n 피해를 입는 '화상' 상태가 된다.",
+      "Synergy": [
+        "Burn"
+      ],
+      "Rarity": "Rare",
+      "TriggerTypes": [
+        "OnStatusApplied"
+      ],
+      "LogicParams": {
+        "Effects": [
+          "Blind",
+          "Burn"
+        ],
+        "Duration": 2,
+        "Damage": 1
+      },
+      "TargetFilter": "Allies",
+      "IconPath": ""
+    },
+    {
+      "Id": 90,
+      "Name": "불타버린 황금사슴",
+      "Description": "원래는 생명력을 상징하는 황금 사슴상이었다. 이제는 그 생기와 형태가 불타 일그러져 불길한 느낌이 든다.\\n4 이하의 피해를 입힐 때, 적에게 n 라운드 동안 2 데미지를 입는 '화상' 상태와 '저항불가' 상태를 부여한다.",
+      "Synergy": [
+        "Burn",
+        "Weakness"
+      ],
+      "Rarity": "Rare",
+      "TriggerTypes": [
+        "ActionStart"
+      ],
+      "LogicParams": {
+        "Effects": [
+          "Irresistible",
+          "Burn"
+        ],
+        "Duration": 1
+      },
+      "TargetFilter": "Enemies",
+      "IconPath": ""
+    },
+    {
+      "Id": 91,
+      "Name": "얼음 심장",
+      "Description": "심장 모양으로 조각한 얼음이다. 차갑지만 생기가 느껴진다.\\n아군 캐릭터가 '빙결' 상태에서 벗어날 때, 해당 캐릭터는 n 라운드 동안 '가속' 상태가 된다.",
+      "Synergy": [
+        "Frozen"
+      ],
+      "Rarity": "Rare",
+      "TriggerTypes": [
+        "OnStatusRemoved"
+      ],
+      "LogicParams": {
+        "Effects": [
+          "Accelerate",
+          "Frozen"
+        ],
+        "Duration": 1
+      },
+      "TargetFilter": "Allies",
+      "IconPath": ""
+    },
+    {
+      "Id": 92,
+      "Name": "조각용 송곳",
+      "Description": "그 어떤 찬란한 얼음 조각상도 이 초라한 송곳에서 탄생한다.\\n'빙결' 태그가 붙은 유물을 얻을 때 모든 캐릭터의 최대 체력이 n 증가한다.",
+      "Synergy": [
+        "Frozen"
+      ],
+      "Rarity": "Rare",
+      "TriggerTypes": [
+        "Always"
+      ],
+      "LogicParams": {
+        "Effects": [
+          "Frozen"
+        ],
+        "MaxHp": 1
+      },
+      "TargetFilter": "AllUnits",
+      "IconPath": ""
+    },
+    {
+      "Id": 93,
+      "Name": "석탄",
+      "Description": "이 투박한 검은 돌은 혹독한 겨울에 생명력이 사그라드는것을 막는다.\\n아군 캐릭터의 '화상' 상태가 끝나면 해당 캐릭터는 즉시 체력을 n 회복한다.",
+      "Synergy": [
+        "Burn"
+      ],
+      "Rarity": "Normal",
+      "TriggerTypes": [
+        "OnStatusRemoved"
+      ],
+      "LogicParams": {
+        "Effects": [
+          "Burn"
+        ],
+        "HealAmount": 2
+      },
+      "TargetFilter": "Allies",
+      "IconPath": ""
+    }
+  ]
+}
