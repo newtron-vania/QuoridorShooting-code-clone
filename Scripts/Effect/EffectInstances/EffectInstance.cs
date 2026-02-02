@@ -10,24 +10,24 @@ public enum EffectInstanceEvent
     End,
 }
 
-public abstract class EffectInstance 
+public abstract class EffectInstance
 {
     //일단 베이스캐릭터만 효과의 원본이 되게  나중에 추가로 생기면 그때 고민
     public readonly BaseCharacter Source;
 
-    protected readonly EffectSystem _effectSystem;
+    protected readonly StatManager _statManager;
 
     protected readonly List<EffectData> _effectDataList = new List<EffectData>();
 
-    public EffectInstance(BaseCharacter source, EffectSystem effectSystem)
+    public EffectInstance(BaseCharacter source, StatManager statManager)
     {
         Source = source;
-        _effectSystem = effectSystem;
+        _statManager = statManager;
     }
 
     public abstract List<IEffectableProvider> FindEffectTargetList(TargetType effectTargetType);
 
-    public virtual void InvokeInstanceEvent(EffectInstanceEvent instanceEvent)  
+    public virtual void InvokeInstanceEvent(EffectInstanceEvent instanceEvent)
     {
         EffectEvent effectEvent;
         switch (instanceEvent)
@@ -48,7 +48,7 @@ public abstract class EffectInstance
             List<IEffectableProvider> targetList = FindEffectTargetList(effectData.Target);
 
             Debug.Log($"[INFO]EffectInstance::InvokeInstanceEvent EventType: {effectEvent} EffectType: {effectData.Type} on {targetList.Count} targets");
-            IBaseEffectLogic effectLogic = _effectSystem.EffectLogicDict[effectData.Type];
+            IBaseEffectLogic effectLogic = _statManager.GetEffectLogic(effectData.Type);
             effectLogic.EffectByEffectEvent(effectEvent, this, effectData, targetList);
         }
     }

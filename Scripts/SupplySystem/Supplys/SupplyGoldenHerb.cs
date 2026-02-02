@@ -5,30 +5,22 @@ using UnityEngine;
 public class SupplyGoldenHerb : BaseSupply
 {
     public override int ID => 15;
-    public override string Name => "금빛 약초";
-    public override string Description => "행동력을 최대치까지 회복한다.";
-    public override SupplymentData.SupplyType Type => SupplymentData.SupplyType.Cure;
-    public override SupplymentData.SupplyTarget Target => SupplymentData.SupplyTarget.TargetChar;
-    public override SupplymentData.SupplyGrade Rank => SupplymentData.SupplyGrade.Rare;
-    public override int DurationRound => 0;
-    public override int EffectAmount => 100;
-    public override Sprite Image => null;
-    public override CharacterStat SupplyCharacterStat { get => _useTargetBaseCharacter; set => _useTargetBaseCharacter = value; }
+    public override BaseCharacter SupplyBaseCharacter { get => _useTargetBaseCharacter; set => _useTargetBaseCharacter = value; }
 
-    private CharacterStat _useTargetBaseCharacter;
+    private BaseCharacter _useTargetBaseCharacter;
+    private int _saveTurn;
 
     public override void UseSupply()
     {
         base.UseSupply();
-        if (DurationRound != 0)
+        if (EffectDataList[0].Get<int>("Duration") != 0)
         {
             SupplyManager.Instance._saveDurationSupply.Add(this);
         }
-        SupplyCharacterStat.Ap = EffectAmount;
-        // TEMP : QA이후 업데이트 될 예정
+        _saveTurn = GameManager.Instance.Turn;
         SupplyUseShowPanelUI supplyUseShowPanelUI = UIManager.Instance.ShowPopupUI<SupplyUseShowPanelUI>();
-        supplyUseShowPanelUI.SupplyName = Name;
-        supplyUseShowPanelUI.TargetName = SupplyCharacterStat.Name;
+        supplyUseShowPanelUI.SupplyID = ID;
+        supplyUseShowPanelUI.TargetName = SupplyBaseCharacter.characterStat.Name;
     }
 
     public override void TargetHighLight()
@@ -39,6 +31,15 @@ public class SupplyGoldenHerb : BaseSupply
     public override bool UpdateSupply()
     {
         base.UpdateSupply();
+        if (SupplyBaseCharacter == null) return false;
+        if (GameManager.Instance.Turn / 2 == 1)
+        {
+            SupplyBaseCharacter.characterStat.Ap = EffectDataList[0].Get<int>("DamageValue");
+        }
+        if (_saveTurn + (EffectDataList[0].Get<int>("Duration") * 2) == GameManager.Instance.Turn)
+        {
+            return false;
+        }
         return true;
     }
 

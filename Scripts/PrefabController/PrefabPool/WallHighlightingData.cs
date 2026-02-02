@@ -20,7 +20,7 @@ public class WallHighlightingData : MonoBehaviour
             // Vector2Int gridPosition = GameManager.ToGridPosition(transform.position - new Vector3(0.5f, 0.5f, 0) * GameManager.GridSize);
             int rotation = (int)((transform.rotation.eulerAngles.z / 90) % 2);
             wallList.Add(new WallData(transform.position, rotation != 0));
-            var mapGraph = PathFindingUtils.GetMapGraph(GameManager.Instance.CharacterController.GetAllCharactersPosition(), wallList, true);
+            var mapGraph = PathFindingUtils.GetMapGraph(GameManager.Instance.BattleSystem.GetAllCharactersPosition(), wallList, true);
             if (PathFindingUtils.CheckStuck(mapGraph)) return false;
             return true;
         }

@@ -51,7 +51,8 @@ public class StageEndPanelUI : BaseUI
 
     public void OnClickCheckButton(PointerEventData data)
     {
-        Debug.Log("[INFO]StageEndPaenelUI(OnClickCheckButton) - 해당 스테이지를 완료했습니다.");
+        Debug.Log("[INFO]StageEndPanelUI(OnClickCheckButton) - 해당 스테이지를 완료했습니다.");
+        UIManager.Instance.ClosePopupUI(this);
         UIManager.Instance.ShowPopupUI<DropMoneyPanelUI>();
         //string CurrentSceneName = SceneManager.GetActiveScene().name;
         //SupplyManager.Reset();

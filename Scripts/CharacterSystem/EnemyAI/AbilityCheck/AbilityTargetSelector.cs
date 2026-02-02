@@ -19,11 +19,11 @@ public class SkillTargetSelector
         PlacementJelly                     // 아군 근처 특정 위치에 젤리 배치
     }
 
-    private CharacterController _controller;
+    private BattleSystem _controller;
 
     // 능력 ID별 전략 매핑
     private Dictionary<int, SkillTargetingStrategy> _strategyBySkillId = new Dictionary<int, SkillTargetingStrategy>();
-    public SkillTargetSelector(CharacterController controller)
+    public SkillTargetSelector(BattleSystem controller)
     {
         _controller = controller;
         _strategyBySkillId.Add(11, SkillTargetingStrategy.SingleTargetSelectMindCotrol);

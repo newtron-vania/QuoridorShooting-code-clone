@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class RewardPopUpUI : BaseUI
@@ -25,7 +26,7 @@ public class RewardPopUpUI : BaseUI
     {
         get
         {
-            return _rewardPool.SelectItem.HasValue ? false : true;
+            return _rewardPool.SelectItem.HasValue;
         }
     }
 
@@ -48,12 +49,15 @@ public class RewardPopUpUI : BaseUI
         Bind<Button>(typeof(Buttons));
         Bind<GameObject>(typeof(GameObjects));
 
-        _rewardPool = GameObject.Find("GameManager").GetComponent<RewardPool>();
+        // _rewardPool = GameObject.Find("GameManager").GetComponent<RewardPool>();
+        _rewardPool = UIManager.Instance.SceneUI.GetComponent<RewardPool>();
+
+        _rewardPool.InitRewardPool();
 
         // 버튼 이벤트 연결
         GetButton((int)Buttons.SkipButton).gameObject.BindEvent(OnClickSkipButton);
         GetButton((int)Buttons.SelectButton).gameObject.BindEvent(OnClickSelectButton);
-        
+
         // 보상 설정
         SpawnItem();
     }
@@ -62,6 +66,7 @@ public class RewardPopUpUI : BaseUI
     {
         Debug.Log($"[INFO] RewardShowPanelUI::OnClickSupplySkipButton - {gameObject.GetComponent<Canvas>().sortingOrder} : 닫힘");
         UIManager.Instance.ClosePopupUI(this);
+        ChangeStageScene();
     }
 
     public void OnClickSelectButton(PointerEventData data)
@@ -70,18 +75,34 @@ public class RewardPopUpUI : BaseUI
         {
             Debug.Log($"[INFO] SupplyShowPanelUI::OnClickSupplySelectButton - {gameObject.GetComponent<Canvas>().sortingOrder} : 닫힘");
             UIManager.Instance.ClosePopupUI(this);
+            ChangeStageScene();
         }
+    }
+    public void ChangeStageScene()
+    {
+        EventManager.Instance.InvokeEvent(HM.EventType.OnGameFinish, this);
+        SceneManager.LoadScene("StageSelect");
     }
 
     private void SpawnItem()
     {
         GameObject parent = GetObject((int)GameObjects.ShowItemsBoundary);
-        for(int i = 0; i < 3; i++)
+        for (int i = 0; i < 3; i++)
         {
             RewardCardData newItemData = _rewardPool.GetRewardCardData();
             _items.Add(UIManager.Instance.MakeSubItem<RewardItemUI>(parent.transform));
             _items[i].CardData = newItemData;
             _items[i].ParentRewardPool = _rewardPool;
+            _items[i].ParentRewardPopUpUI = this;
+            _items[i].ItemIndex = i;
+        }
+    }
+    public void ResetItems()
+    {
+        // 모든 아이템 UI 리셋 함수 실행
+        foreach (RewardItemUI child in _items)
+        {
+            child.Reset();
         }
     }
 }

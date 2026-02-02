@@ -19,8 +19,9 @@ public class StatuseffectData
 {
     public int Id;                          // 상태 이상 효과 ID
     public string Name;                     // 상태 이상 효과 이름
-    public string NameKr;                   // 상태 이상 효과 이름 (한국어) 
+    public string NameKr;                   // 상태 이상 효과 이름 (한국어)
     public string Description;              // 상태 이상 효과 설명
     public HashSet<StatuseffectTag> Tags;                // 상태 이상 효과 태그
     public List<EffectData> EffectDataList; // 효과 데이터
+    public int Priority = 0;                // 실행 우선순위 (낮을수록 먼저 실행, 기본값 0)
 }

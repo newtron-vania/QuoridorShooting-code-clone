@@ -36,7 +36,7 @@ public class PlayerActionUI : BaseUI
     public override UIName ID => UIName.PlayerActionUI;
 
     public GameObject GetToken;
-    private CharacterController _characterController;
+    private BattleSystem _battleSystem;
     public PlayerCharacter Character;
 
     private void Start()
@@ -47,9 +47,9 @@ public class PlayerActionUI : BaseUI
     }
 
     // 필수 정의
-    public void SetCharacter(CharacterController controller, PlayerCharacter character)
+    public void SetCharacter(BattleSystem controller, PlayerCharacter character)
     {
-        _characterController = controller;
+        _battleSystem = controller;
         Character = character;
     }
 

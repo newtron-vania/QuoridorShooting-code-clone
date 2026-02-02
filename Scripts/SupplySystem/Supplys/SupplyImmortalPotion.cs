@@ -5,32 +5,22 @@ using UnityEngine;
 public class SupplyImmortalPotion : BaseSupply
 {
     public override int ID => 9;
-    public override string Name => "불사의 포션";
-    public override string Description => "2라운드 동안 받는 피해량이 2만큼 줄어든다";
-    public override SupplymentData.SupplyType Type => SupplymentData.SupplyType.Defense;
-    public override SupplymentData.SupplyTarget Target => SupplymentData.SupplyTarget.TargetChar;
-    public override SupplymentData.SupplyGrade Rank => SupplymentData.SupplyGrade.Normal;
-    public override int DurationRound => 2;
-    public override int EffectAmount => 2;
-    public override Sprite Image => null;
-    public override CharacterStat SupplyCharacterStat { get => _useTargetBaseCharacter; set => _useTargetBaseCharacter = value; }
+    public override BaseCharacter SupplyBaseCharacter { get => _useTargetBaseCharacter; set => _useTargetBaseCharacter = value; }
 
-    private CharacterStat _useTargetBaseCharacter;
+    private BaseCharacter _useTargetBaseCharacter;
     private int _saveTurn;
 
     public override void UseSupply()
     {
         base.UseSupply();
-        if(DurationRound != 0)
+        if (EffectDataList[0].Get<int>("Duration") != 0)
         {
             SupplyManager.Instance._saveDurationSupply.Add(this);
         }
-        // TEMP : QA이후 업데이트 될 예정
         _saveTurn = GameManager.Instance.Turn;
         SupplyUseShowPanelUI supplyUseShowPanelUI = UIManager.Instance.ShowPopupUI<SupplyUseShowPanelUI>();
-        supplyUseShowPanelUI.SupplyName = Name;
-        supplyUseShowPanelUI.TargetName = SupplyCharacterStat.Name;
-        //Debug.Log($"[INFO]SupplyImmortalPotion - {SupplyCharacterStat.Id}");
+        supplyUseShowPanelUI.SupplyID = ID;
+        supplyUseShowPanelUI.TargetName = SupplyBaseCharacter.characterStat.Name;
     }
 
     public override void TargetHighLight()
@@ -40,8 +30,13 @@ public class SupplyImmortalPotion : BaseSupply
 
     public override bool UpdateSupply()
     {
-        if (SupplyCharacterStat == null) return false;
-        if (_saveTurn + (DurationRound * 2) == GameManager.Instance.Turn)
+        base.UpdateSupply();
+        if (SupplyBaseCharacter == null) return false;
+        if (GameManager.Instance.Turn / 2 == 1)
+        {
+            SupplyBaseCharacter.characterStat.Hp += 5;
+        }
+        if (_saveTurn + (EffectDataList[0].Get<int>("Duration") * 2) == GameManager.Instance.Turn)
         {
             return false;
         }

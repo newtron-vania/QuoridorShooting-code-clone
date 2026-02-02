@@ -28,7 +28,7 @@ public class CommonStatBaseDamageEffect : IBaseEffectLogic
         int dmg=0;
         switch(effectData.Type)
         {
-            case EffectType.CommonStatBaseDamage_Atk:
+            case EffectType.CommonStatBaseDamage_AttackDamage:  // 원본: CommonStatBaseDamage_Atk
 
                 dmg = effectInstance.Source.CharacterStat.Atk * effectData.Get<int>("StatMultiplier") + effectData.Get<int>("ExtraDamage");
                 break;

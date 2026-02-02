@@ -29,7 +29,7 @@ public class CommonSimpleHealEffect : IBaseEffectLogic
             var character = target.GetEffectable<BaseCharacter>();
             switch (effectData.Type)
             {
-                case EffectType.CommonSimpleHeal:
+                case EffectType.Cure:  // 원본: CommonSimpleHeal
                     int healAmount = effectData.Get<int>("HealAmount");
                     character.characterStat.Hp+= healAmount;
                     break;

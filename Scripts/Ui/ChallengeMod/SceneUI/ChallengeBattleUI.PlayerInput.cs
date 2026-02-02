@@ -50,7 +50,7 @@ public partial class ChallengeBattleUI : BaseUI
     // 0 : Move, 1 : Attack, 2 : SpecialAction, 3 : Supply, 4 : WallSet, 5 : Skill, 6 : ActionConfirm
     private Dictionary<PlayerInputUI.ButtonType, PlayerInputButtonData> _playerInputDatas = new Dictionary<PlayerInputUI.ButtonType, PlayerInputButtonData>();
     private PlayerCharacter _currentPlayerCharacter;
-    private CharacterController _controller;
+    private BattleSystem _controller;
 
     private void PlayerInputInit()
     {
@@ -78,7 +78,7 @@ public partial class ChallengeBattleUI : BaseUI
         // 기본 플레이어 인풋 UI 화면 넣어두기 Size는 항상 1로 고정
         _playerUIStack.Push(GetObject((int)GameObjects.DefalutPlayerInput));
 
-        _controller = GameManager.Instance.CharacterController;
+        _controller = GameManager.Instance.BattleSystem;
     }
 
     private void SetPlayerInputData()
@@ -160,7 +160,7 @@ public partial class ChallengeBattleUI : BaseUI
     {
         if (_playerInputDatas[PlayerInputUI.ButtonType.Confirm].IsActive)
         {
-            switch (GameManager.Instance.CharacterController.PlayerControlStatus)
+            switch (GameManager.Instance.BattleSystem.PlayerControlStatus)
             {
                 // 확정 버튼을 눌렀을 때 각각 실행되어야하는 이벤트 등록
                 case PlayerControlStatus.Move:
@@ -190,10 +190,12 @@ public partial class ChallengeBattleUI : BaseUI
                     break;
 
                 case PlayerControlStatus.Build:
-                    _controller.SetWall(); // 벽 설치
-                    _currentPlayerCharacter.characterStat.Ap -= _controller.NeededBuildPoint; // 행동력 소모
-                    GameManager.Instance.playerWallCount++; // 설치한 벽 개수 +1
-                    GameManager.Instance.CharacterController.PlayerControlStatus = PlayerControlStatus.None;
+                    if (_controller.SetWall()) // 벽 설치
+                    {
+                        _currentPlayerCharacter.characterStat.Ap -= _controller.NeededBuildPoint; // 행동력 소모
+                        GameManager.Instance.playerWallCount++; // 설치한 벽 개수 +1
+                    }
+                    GameManager.Instance.BattleSystem.PlayerControlStatus = PlayerControlStatus.None;
                     UIManager.Instance.ClosePopupUI();
                     _currentPlayerCharacter.ResetPreview();
                     break;
@@ -241,9 +243,9 @@ public partial class ChallengeBattleUI : BaseUI
         // 처음 화면으로 초기화
         ResetPlayerInputUI();
         // 선택된 캐릭터가 있을 경우 해당 조건이 참인 경우 BaseCharacter가 존재한다는 가정
-        if (GameManager.Instance.CharacterController.CurrentSelectCharacter)
+        if (GameManager.Instance.BattleSystem.CurrentSelectCharacter)
         {
-            BaseCharacter currentSelectCharacter = GameManager.Instance.CharacterController.CurrentSelectBaseCharacter;
+            BaseCharacter currentSelectCharacter = GameManager.Instance.BattleSystem.CurrentSelectBaseCharacter;
             _playerInputDatas[PlayerInputUI.ButtonType.Attack].IsActive = currentSelectCharacter.CanAttack;
             _playerInputDatas[PlayerInputUI.ButtonType.Move].IsActive = currentSelectCharacter.CanMove;
             _playerInputDatas[PlayerInputUI.ButtonType.SpecialAction].IsActive = (currentSelectCharacter.CanUseSkill || currentSelectCharacter.CanBuild);

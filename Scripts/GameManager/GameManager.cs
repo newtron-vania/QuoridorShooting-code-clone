@@ -25,7 +25,6 @@ public partial class GameManager : MonoBehaviour
 
     public List<SavedPlayerCharacterData> PlayerList = new List<SavedPlayerCharacterData>();
     public List<WallData> WallList = new List<WallData>();
-    public GameObject WallHighlightingParent;
     public int playerWallCount = 10;
     public int playerMaxBuildWallCount = 10;
     public int playerDestroyedWallCount = 0;
@@ -33,16 +32,14 @@ public partial class GameManager : MonoBehaviour
 
     public LogManager CrashHandler { get; private set; } = new LogManager();
 
-    public TileController TileController { get; private set; }
-
-    private CharacterController _controller;
-    public CharacterController CharacterController
+    private BattleSystem _controller;
+    public BattleSystem BattleSystem
     {
         get
         {
             if (_controller == null)
             {
-                _controller = FindObjectOfType<CharacterController>().GetComponent<CharacterController>();
+                _controller = FindObjectOfType<BattleSystem>().GetComponent<BattleSystem>();
             }
 
             return _controller;
@@ -96,18 +93,19 @@ public partial class GameManager : MonoBehaviour
             Destroy(gameObject);
         }
 
-        TileController = new TileController();
-
 #if UNITY_ANDROID
         Application.targetFrameRate = 60;
 #endif
 
         // 테스트를 위한 랜덤 시드 설정
         if (RandSeed == -1)
+        {
             RandSeed = UnityEngine.Random.Range(0, int.MaxValue);
-        LogManager.Instance.Init();
-        // RandSeed = 4433;
-        Debug.Log($"[INFO] GameManager::Awake() - RandSeed: {RandSeed}");
+            LogManager.Instance.Init();
+            //절차적 맵생성을 위한 MapTempController의 Regenerate버튼이 러닝타임 중에 시드를 수정합니다!
+            // RandSeed = 4433;
+            Debug.Log($"[INFO] GameManager::Awake() - RandSeed: {RandSeed}");
+        }
     }
     List<Vector2Int> _clickVector = new List<Vector2Int>();
     TouchUtils.TouchState _touchState = TouchUtils.TouchState.None;
@@ -126,6 +124,29 @@ public partial class GameManager : MonoBehaviour
         //SetWall();
 
         SetUIForScene();
+
+
+    }
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name == "BattleScene")
+        {
+            PlayerList = new List<SavedPlayerCharacterData>();
+            WallList = new List<WallData>();
+            playerWallCount = 0;
+            playerMaxBuildWallCount = 10;
+            playerDestroyedWallCount = 0;
+            playerMaxDestroyWallCount = 0;
+            SetUIForScene();
+        }
     }
     private void Update()
     {
@@ -145,13 +166,16 @@ public partial class GameManager : MonoBehaviour
         //    }
         //}
 
-        if (Time.time > _nextTime)
+        if (SceneManager.GetActiveScene().name == "BattleScene")
         {
-            _nextTime = Time.time + _pointTime; //다음번 실행할 시간
-
-            if(UIManager.Instance.LogQueue.Count != 0)
+            if (Time.time > _nextTime)
             {
-                UIManager.Instance.FindUI<ChallengeBattleUI>().ShowLogText(UIManager.Instance.LogQueue.Dequeue());
+                _nextTime = Time.time + _pointTime; //다음번 실행할 시간
+
+                if (UIManager.Instance.LogQueue.Count != 0)
+                {
+                    UIManager.Instance.FindUI<ChallengeBattleUI>().ShowLogText(UIManager.Instance.LogQueue.Dequeue());
+                }
             }
         }
     }

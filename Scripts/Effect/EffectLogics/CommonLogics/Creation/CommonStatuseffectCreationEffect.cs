@@ -10,11 +10,11 @@ using UnityEngine;
  */
 public class CommonStatuseffectCreationEffect : IBaseEffectLogic
 {
-    private EffectSystem _effectSystem;
+    private StatManager _statManager;
 
-    public CommonStatuseffectCreationEffect(EffectSystem effectSystem)
+    public CommonStatuseffectCreationEffect(StatManager statManager)
     {
-        _effectSystem = effectSystem;
+        _statManager = statManager;
     }
 
     public void EffectByGameEvent(HM.EventType eventType, EffectInstance effectInstance, EffectData effectData, List<IEffectableProvider> targetList) { }
@@ -40,16 +40,17 @@ public class CommonStatuseffectCreationEffect : IBaseEffectLogic
 
     private void ApplyStatuseffect(EffectInstance effectInstance, EffectData effectData, List<IEffectableProvider> targetList)
     {
-        if (!_effectSystem.StatuseffectDataDict.TryGetValue(effectData.Get<int>("StatuseffectId"), out StatuseffectData statuseffectData))
+        StatuseffectData statuseffectData = DataManager.Instance.GetStatuseffectData(effectData.Get<int>("StatuseffectId"));
+        if (statuseffectData == null)
         {
-            Debug.LogError($"[ERROR]CommonStatuseffectCreationEffect::ApplyStatuseffect: StatuseffectId {effectData.Get<int>("StatuseffectId")} not found in StatuseffectDataDict");
+            Debug.LogError($"[ERROR]CommonStatuseffectCreationEffect::ApplyStatuseffect: StatuseffectId {effectData.Get<int>("StatuseffectId")} not found in DataManager");
             return;
         }
 
         foreach (var target in targetList)
         {
             StatuseffectInstance newInstance
-              = new StatuseffectInstance(_effectSystem, statuseffectData, effectInstance.Source, target, effectData);
+              = new StatuseffectInstance(_statManager, statuseffectData, effectInstance.Source, target, effectData);
             newInstance.InvokeInstanceEvent(EffectInstanceEvent.Start);
         }
     }

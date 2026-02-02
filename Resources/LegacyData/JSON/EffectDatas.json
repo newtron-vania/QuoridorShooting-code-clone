@@ -121,15 +121,15 @@
     },
     {
       "Id": 3501,
-      "EffectType": "TileStateChange",
+      "EffectType": "CellStateChange",
       "ValueList": [],
-      "EffectTag": "SmokeBombTile"
+      "EffectTag": "SmokeBombCell"
     },
     {
       "Id": 3502,
-      "EffectType": "TileStateChange",
+      "EffectType": "CellStateChange",
       "ValueList": [],
-      "EffectTag": "PoisonTile"
+      "EffectTag": "PoisonCell"
     },
     {
       "Id": 3601,
@@ -137,7 +137,7 @@
       "ValueList": [
         1
       ],
-      "EffectTag": "SlimeTile"
+      "EffectTag": "SlimeCell"
     },
     {
       "Id": 5001,

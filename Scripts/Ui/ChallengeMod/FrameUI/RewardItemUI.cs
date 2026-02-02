@@ -32,9 +32,11 @@ public class RewardItemUI : BaseUI
     }
 
     protected override bool IsSorting => false;
-    public override UIName ID => UIName.SupplyItemUI;
+    public override UIName ID => UIName.RewardItemUI;
     public RewardCardData CardData;
+    public int ItemIndex;
     public RewardPool ParentRewardPool;
+    public RewardPopUpUI ParentRewardPopUpUI;
 
     private void Start()
     {
@@ -49,7 +51,7 @@ public class RewardItemUI : BaseUI
         Bind<Button>(typeof(Buttons));
         // 이벤트 연결
         GetButton((int)Buttons.BackGround).gameObject.BindEvent(OnClickSupplySelect);
-        
+
         // 아이템 설명 연결
         GetText((int)Texts.ItemNameText).text = CardData.Name;
         GetText((int)Texts.DescriptionText).text = CardData.Description;
@@ -59,7 +61,7 @@ public class RewardItemUI : BaseUI
 
     public void Reset()
     {
-        if (ParentRewardPool.SelectItem?.Id != CardData.Id && ParentRewardPool.SelectItem?.Category != CardData.Category)
+        if (ParentRewardPool.SelectItemIdx != ItemIndex)
         {
             GetObject((int)GameObjects.BackEffect).SetActive(false);
         }
@@ -68,6 +70,8 @@ public class RewardItemUI : BaseUI
     public void OnClickSupplySelect(PointerEventData data)
     {
         ParentRewardPool.SelectItem = CardData;
+        ParentRewardPool.SelectItemIdx = ItemIndex;
         GetObject((int)GameObjects.BackEffect).SetActive(true);
+        ParentRewardPopUpUI.ResetItems();
     }
 }

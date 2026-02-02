@@ -1,27 +1,27 @@
 using System.Collections;
 using System.Collections.Generic;
 
+// 새로운 맵 유형을 만들고 싶다면 해당 클래스를 상속하세요.
+
 // 게임로직코드입니다 
 // 엔진코드는 가급적 삼가해주세요.
-public abstract class StageProbskillStyle
+public abstract class StageProbabilityStyle
 {
     protected readonly int _seed;
-    protected Dictionary<Stage.StageType, int> _stageProbskillDic;
-    public int TotalCount()
+    protected Dictionary<Stage.StageType, int> _stageProbabilityDict;
+    public int GetStageTypeTotalWeight()
     {
         int total = 0;
-        foreach (int probskill in _stageProbskillDic.Values)
-        {
-            total += probskill;
-        }
+        foreach (int weight in _stageProbabilityDict.Values) total += weight;
         return total;
-    }
-    protected void SetStageTypeProbskill(Stage.StageType type, int probskill)
+    } //GetEnemyCountTotalWeight
+    protected void SetStageTypeProbability(Stage.StageType type, int weight)
     {
-        _stageProbskillDic[type] = probskill;
-
+        _stageProbabilityDict[type] = weight;
     }
 
     public abstract Stage.StageType GetRandomStageType(int curFieldLevel);
+
+    public abstract Stage.StageType GetMysteryEventType();
 
 }

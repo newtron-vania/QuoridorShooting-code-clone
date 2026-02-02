@@ -24,4 +24,23 @@ public class CharacterData
     public int MoveRangeId;                 // 캐릭터 이동 가능 범위 id
 
     public int AttackRangeId;               // 캐릭터 공격 가능 범위 id   
+
+    public CharacterData CloneCharacterData()
+    {
+        return new CharacterData
+        {
+            Index = this.Index,
+            Name = this.Name,
+            Description = this.Description,
+            Class = this.Class,
+            Type = this.Type,
+            Hp = this.Hp,
+            Atk = this.Atk,
+            Avd = this.Avd,
+            ApRecovery = this.ApRecovery,
+            SkillId = this.SkillId,
+            MoveRangeId = this.MoveRangeId,
+            AttackRangeId = this.AttackRangeId
+        };
+    }
 }

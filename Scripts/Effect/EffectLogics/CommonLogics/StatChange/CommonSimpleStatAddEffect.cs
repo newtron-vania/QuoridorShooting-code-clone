@@ -32,10 +32,10 @@ public class CommonSimpleStatAddEffect : IBaseEffectLogic
             //버프 시작할 때 적용한번 해주기
             switch (effectData.Type)
             {
-                case EffectType.CommonStatAdd_ApRecovery:
+                case EffectType.CommonStatAdd_ActionPointPerTurn:  // 원본: CommonStatAdd_ApRecovery
                     character.characterStat.ApRecovery += effectData.Get<int>("ExtraStat");
                     break;
-                case EffectType.CommonStatAdd_Avd:
+                case EffectType.CommonStatAdd_DamageResistance:  // 원본: CommonStatAdd_Avd
                     character.characterStat.Avd += effectData.Get<float>("ExtraStat");
                     break;
                 default:
@@ -53,10 +53,10 @@ public class CommonSimpleStatAddEffect : IBaseEffectLogic
             //버프 끝날 때
             switch (effectData.Type)
             {
-                case EffectType.CommonStatAdd_ApRecovery:
+                case EffectType.CommonStatAdd_ActionPointPerTurn:  // 원본: CommonStatAdd_ApRecovery
                     character.characterStat.ApRecovery -= effectData.Get<int>("ExtraStat");
                     break;
-                case EffectType.CommonStatAdd_Avd:
+                case EffectType.CommonStatAdd_DamageResistance:  // 원본: CommonStatAdd_Avd
                     character.characterStat.Avd -= effectData.Get<float>("ExtraStat");
                     break;
                 default:

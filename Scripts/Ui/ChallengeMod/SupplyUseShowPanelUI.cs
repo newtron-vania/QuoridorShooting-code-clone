@@ -34,6 +34,8 @@ public class SupplyUseShowPanelUI : BaseUI
         Bind<Button>(typeof(Buttons));
         Bind<TMP_Text>(typeof(Texts));
 
+        SupplyName = DataManager.Instance.GetSupplyData(SupplyID).Name;
+
         // 버튼 이벤트 연결
         GetButton((int)Buttons.ExitButton).gameObject.BindEvent(OnClickSupplyExitButton);
         GetText((int)Texts.SupplyUseDesText).text = "<color=#20B2AA>" + SupplyName + "</color>을 <color=#DC143C>" + TargetName + "</color>에게 사용했습니다.";

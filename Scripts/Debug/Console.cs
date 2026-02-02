@@ -27,9 +27,9 @@ public class Console : MonoBehaviour
 
         // 명령어 추가
         _commands.Add("help", new Tuple<Func<string[], string>, string>(Help, "Show Commands Description"));
-        _commands.Add("setWallInstantly", CreateCommand((Action<Vector2Int, bool>)GameManager.Instance.CharacterController.SetWallInstantly, "Wall set at {0}, IsHorizontal: {1}\n", "setWall ({x}, {y}) {isHorizontal}"));
-        _commands.Add("setPreviewWall", CreateCommand((Action<Vector2Int, bool>)GameManager.Instance.CharacterController.SetWallPreview, "Preview set at {0}, IsHorizontal: {1}\n", "setPreview ({x}, {y}) {isHorizontal}"));
-        _commands.Add("setWall", CreateCommand((Action)GameManager.Instance.CharacterController.SetWall, "Wall set\n", "setWall"));
+        _commands.Add("setWallInstantly", CreateCommand((Action<Vector2Int, bool>)GameManager.Instance.BattleSystem.SetWallInstantly, "Wall set at {0}, IsHorizontal: {1}\n", "setWall ({x}, {y}) {isHorizontal}"));
+        _commands.Add("setPreviewWall", CreateCommand((Action<Vector2Int, bool>)GameManager.Instance.BattleSystem.SetWallPreview, "Preview set at {0}, IsHorizontal: {1}\n", "setPreview ({x}, {y}) {isHorizontal}"));
+        _commands.Add("setWall", CreateCommand((Func<bool>)GameManager.Instance.BattleSystem.SetWall, "Wall set\n", "setWall"));
 
         // 이벤트 추가
         CommandField.onEndEdit.AddListener(delegate { ExecuteCommand(CommandField.text); CommandField.ActivateInputField(); });

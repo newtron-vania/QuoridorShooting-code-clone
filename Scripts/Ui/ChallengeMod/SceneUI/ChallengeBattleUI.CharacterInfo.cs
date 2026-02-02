@@ -74,7 +74,7 @@ public partial class ChallengeBattleUI : BaseUI
         // 생성 flag : true - 아군 / :false - 적군
         if (isPlayerTeam)
         {
-            charData = GameManager.Instance.CharacterController.StageCharacter[CharacterIdentification.Player];
+            charData = GameManager.Instance.BattleSystem.StageCharacter[CharacterIdentification.Player];
             foreach (BaseCharacter child in charData)
             {
                 GameObject item = UIManager.Instance.MakeSubItem<CharInfoItemUI>(parent.transform).gameObject;
@@ -88,7 +88,7 @@ public partial class ChallengeBattleUI : BaseUI
         }
         else
         {
-            charData = GameManager.Instance.CharacterController.StageCharacter[CharacterIdentification.Enemy];
+            charData = GameManager.Instance.BattleSystem.StageCharacter[CharacterIdentification.Enemy];
             foreach (BaseCharacter child in charData)
             {
                 GameObject item = UIManager.Instance.MakeSubItem<CharInfoItemUI>(parent.transform).gameObject;

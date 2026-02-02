@@ -137,7 +137,7 @@ public partial class ChallengeBattleUI : BaseUI, IEventListener
             // 특정 기물이 선택됐을 때
             case EventType.OnCharacterSelected:
                 // 사용 가능 버튼만 활성화 시킬것 적/ 아군 비교
-                if(GameManager.Instance.CharacterController.CurrentSelectCharacter.tag == "Enemy")
+                if (GameManager.Instance.BattleSystem.CurrentSelectCharacter?.tag == "Enemy")
                 {
                     DeactivePlayerInputButtons();
                     UIManager.Instance.CloseAllGroupUI(UIName.CharInfoHighLighting);
@@ -145,7 +145,7 @@ public partial class ChallengeBattleUI : BaseUI, IEventListener
                 else
                 {
                     PartActivePlayerInputButtons();
-                    _currentPlayerCharacter = (PlayerCharacter)GameManager.Instance.CharacterController.CurrentSelectBaseCharacter;
+                    _currentPlayerCharacter = (PlayerCharacter)GameManager.Instance.BattleSystem.CurrentSelectBaseCharacter;
                     CharInfoSelectHighLighting();
                 }
                 break;
@@ -170,12 +170,27 @@ public partial class ChallengeBattleUI : BaseUI, IEventListener
         EventManager.Instance.AddEvent(EventType.OnCharacterDead, this);    // 캐릭터 기물 사망시
         EventManager.Instance.AddEvent(EventType.OnSupplyGet, this);        // 보급품 획득 시
     }
+
+    private void OnDestroy()
+    {
+        EventManager.Instance.RemoveEvent(EventType.OnRoundEnd, this);
+        EventManager.Instance.RemoveEvent(EventType.OnTurnEnd, this);
+        EventManager.Instance.RemoveEvent(EventType.OnCharacterSelected, this);
+        EventManager.Instance.RemoveEvent(EventType.OnCharacterDeselected, this);
+        EventManager.Instance.RemoveEvent(EventType.OnCharacterDead, this);
+        EventManager.Instance.RemoveEvent(EventType.OnSupplyGet, this);
+    }
     // 턴 넘기기 버튼 클릭
     public void OnClickTurnSkipButton(PointerEventData data)
     {
         Debug.Log("[INFO] ChallengeBattleUI::OnClickTurnSkipButton() - 턴 넘기기 버튼 클릭");
-        if (GameManager.Instance.CharacterController.IsPlayerTurn && _canSkipButton)
+        if (GameManager.Instance.BattleSystem.IsPlayerTurn && _canSkipButton)
         {
+            if (_currentPlayerCharacter != null)
+            {
+                _currentPlayerCharacter.ChangePlayerControlStatus(PlayerControlStatus.None);
+                _currentPlayerCharacter.ResetPreview();
+            }
             _canSkipButton = false;
             GameManager.Instance.EndTurn();
             StartCoroutine(OnSkipButtonInit());

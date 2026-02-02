@@ -20,7 +20,7 @@ public class EnemyCharacter : BaseCharacter
 
     public BaseCharacter TargetCharacter { get; protected set; }
 
-    public EnemyCharacter(CharacterController controller) : base(controller)
+    public EnemyCharacter(BattleSystem controller) : base(controller)
     {
         _targetSelector = new SkillTargetSelector(controller);
         _enemyStateMachines = new Dictionary<EnemyStateMachineType, CharacterStateMachine>();
@@ -191,8 +191,8 @@ public class EnemyCharacter : BaseCharacter
         else
         {
             NextMovePosition = Position;
-            Debug.LogError(
-                "[ERROR] EnemyCharacter::SetNextMovingPositionForAttack - No valid path found, staying in current position.");
+            Debug.Log(
+                "[INFO] EnemyCharacter::SetNextMovingPositionForAttack - No valid path found, staying in current position.");
         }
     }
 
@@ -236,7 +236,7 @@ public class EnemyCharacter : BaseCharacter
 
         foreach (var position in movablePositions)
             // 해당 위치의 총 데미지량 계산
-            if (!GameManager.Instance.TileController.GetDamageGraphTileCharacters(position).Any())
+            if (!GameManager.Instance.BattleSystem.CellManager.GetDamageGraphCellCharacters(position).Any())
             {
                 // 데미지 필드가 없는 위치는 위험도가 0
                 positionRiskMap[position] = 0;
@@ -244,7 +244,7 @@ public class EnemyCharacter : BaseCharacter
             else
             {
                 // 해당 위치에 있는 모든 캐릭터의 공격력 합산
-                var totalDamage = GameManager.Instance.TileController.GetDamageGraphTileCharacters(position)
+                var totalDamage = GameManager.Instance.BattleSystem.CellManager.GetDamageGraphCellCharacters(position)
                     .Sum(character => character.Atk);
                 positionRiskMap[position] = totalDamage;
             }
@@ -258,10 +258,10 @@ public class EnemyCharacter : BaseCharacter
 
     public void SetEvadeTargetCharacter(CharacterIdentification targetIdentification, int index = 0)
     {
-        GameManager.Instance.TileController.SetDamageFieldGraph(
+        GameManager.Instance.BattleSystem.CellManager.SetDamageFieldGraph(
             Controller.StageCharacter[CharacterIdentification.Player]);
 
-        var damagedList = GameManager.Instance.TileController.GetDamageGraphTileCharacters(Position)
+        var damagedList = GameManager.Instance.BattleSystem.CellManager.GetDamageGraphCellCharacters(Position)
             .OrderByDescending(character => character.Atk).ToArray();
         TargetCharacter = damagedList.Length > index ? damagedList[index] : null;
     }

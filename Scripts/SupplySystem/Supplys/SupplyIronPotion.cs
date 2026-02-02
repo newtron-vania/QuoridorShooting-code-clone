@@ -5,31 +5,23 @@ using UnityEngine;
 public class SupplyIronPotion : BaseSupply
 {
     public override int ID => 8;
-    public override string Name => "아이언 포션";
-    public override string Description => "1라운드 동안 받는 피해량이 1만큼 줄어든다";
-    public override SupplymentData.SupplyType Type => SupplymentData.SupplyType.Defense;
-    public override SupplymentData.SupplyTarget Target => SupplymentData.SupplyTarget.TargetChar;
-    public override SupplymentData.SupplyGrade Rank => SupplymentData.SupplyGrade.Normal;
-    public override int DurationRound => 1;
-    public override int EffectAmount => 1;
-    public override Sprite Image => null;
-    public override CharacterStat SupplyCharacterStat { get => _useTargetBaseCharacter; set => _useTargetBaseCharacter = value; }
+    public override BaseCharacter SupplyBaseCharacter { get => _useTargetBaseCharacter; set => _useTargetBaseCharacter = value; }
 
-    private CharacterStat _useTargetBaseCharacter;
+    private BaseCharacter _useTargetBaseCharacter;
     private int _saveTurn;
 
     public override void UseSupply()
     {
         base.UseSupply();
-        if (DurationRound != 0)
+        if (EffectDataList[0].Get<int>("Duration") != 0)
         {
             SupplyManager.Instance._saveDurationSupply.Add(this);
         }
-        // TEMP : QA이후 업데이트 될 예정
         _saveTurn = GameManager.Instance.Turn;
         SupplyUseShowPanelUI supplyUseShowPanelUI = UIManager.Instance.ShowPopupUI<SupplyUseShowPanelUI>();
-        supplyUseShowPanelUI.SupplyName = Name;
-        supplyUseShowPanelUI.TargetName = SupplyCharacterStat.Name;
+        supplyUseShowPanelUI.SupplyID = ID;
+        supplyUseShowPanelUI.TargetName = SupplyBaseCharacter.characterStat.Name;
+        SupplyBaseCharacter.characterStat.Avd += (float)EffectDataList[0].Get<int>("DamageValue")/100;
     }
 
     public override void TargetHighLight()
@@ -37,12 +29,13 @@ public class SupplyIronPotion : BaseSupply
         base.TargetHighLight();
     }
 
-    public override bool UpdateSupply()
+    public override bool UpdateSupply() 
     {
         base.UpdateSupply();
-        if (SupplyCharacterStat == null) return false;
-        if (_saveTurn + (DurationRound * 2) == GameManager.Instance.Turn)
+        if (SupplyBaseCharacter == null) return false;
+        if (_saveTurn + (EffectDataList[0].Get<int>("Duration") * 2) == GameManager.Instance.Turn)
         {
+            SupplyBaseCharacter.characterStat.Avd -= (float)EffectDataList[0].Get<int>("DamageValue")/100;
             return false;
         }
         return true;

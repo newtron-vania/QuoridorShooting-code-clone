@@ -4,6 +4,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using Mono.Cecil.Cil;
 
 public class InventoryItemUI : BaseUI
 {
@@ -30,6 +31,8 @@ public class InventoryItemUI : BaseUI
     public int ItemID;
     public bool IsSupplyItem;
 
+    private List<EffectData> _effects;
+
     private void Awake()
     {
         Init();
@@ -53,6 +56,15 @@ public class InventoryItemUI : BaseUI
 
     public void OnClickInvenItem(PointerEventData data)
     {
+        if (IsSupplyItem) _effects = DataManager.Instance.GetSupplyData(ItemID).EffectDataList;
+        else return;
+        // 인게임 상에서 기물 선택이 필수로 요구하는 보급품일 경우 검사
+        if (_effects[0].Target == TargetType.Self)
+        {
+            GameObject token = GameManager.Instance.BattleSystem.CurrentSelectCharacter;
+            IsSupplyItem = (token && token.tag == "Player") ? true : false;
+        }
+
         if (IsSupplyItem)
         {
             SupplyUsePanelUI item = UIManager.Instance.ShowPopupUI<SupplyUsePanelUI>();
@@ -60,7 +72,9 @@ public class InventoryItemUI : BaseUI
         }
         else
         {
-
+            AlertPopUpUI alert = UIManager.Instance.ShowPopupUI<AlertPopUpUI>();
+            alert.ShowText = "올바른 기물을 선택해주세요.";
+            IsSupplyItem = true;
         }
     }
 }

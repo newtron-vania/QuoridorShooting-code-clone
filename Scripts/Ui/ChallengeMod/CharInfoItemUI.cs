@@ -47,7 +47,7 @@ public class CharInfoItemUI : BaseUI
     public Transform DetailParent;
     public GameObject HighParent;
 
-    private CharacterController _controller;
+    private BattleSystem _controller;
     private Tween _warnTween;
 
     private void Start()
@@ -72,7 +72,7 @@ public class CharInfoItemUI : BaseUI
         HighParent = GetObject((int)GameObjects.HighLight);
 
         // 오브젝트 찾기
-        _controller = GameManager.Instance.CharacterController;
+        _controller = GameManager.Instance.BattleSystem;
 
         SetInfo();
         ItemBaseCharacter.OnDamage += OnCharacterTakeDamage;
@@ -95,7 +95,7 @@ public class CharInfoItemUI : BaseUI
     {
         GetText((int)Texts.CharAttackText).text = ItemBaseCharacter.Atk.ToString();
         GetText((int)Texts.CharDefenceText).text = (ItemBaseCharacter.characterStat.Avd * 100) + "%";
-        string hpString = ItemBaseCharacter.Hp < ItemBaseCharacter.MaxHp ? "<color=#FF3B3B>" : "<color=#000000>";
+        string hpString = ItemBaseCharacter.Hp < ItemBaseCharacter.MaxHp ? "<color=#FF3B3B>" : "<color=#FFFFFF>";
         GetText((int)Texts.CharHpText).text = hpString + ItemBaseCharacter.Hp + "</color>/" + ItemBaseCharacter.MaxHp;
         GetText((int)Texts.CharTiaText).text = ItemBaseCharacter.characterStat.Ap.ToString();
         // 행동력 관련도 추가해야함

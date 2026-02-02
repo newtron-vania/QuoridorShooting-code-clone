@@ -6,7 +6,7 @@ using UnityEngine;
 
 public partial class SkillSystem : MonoBehaviour, IEventListener
 {
-    private EffectSystem _effectSystem;
+    private StatManager _statManager;
 
     //캐싱된 SkillData
     public ReadOnlyDictionary<int, SkillData> SkillDataDict { get; private set; }
@@ -21,8 +21,12 @@ public partial class SkillSystem : MonoBehaviour, IEventListener
         //이벤트 등록?
         EventManager.Instance.AddEvent(HM.EventType.OnTurnEnd, this);
 
-        //EffectSystem등록
-        _effectSystem = GameObject.Find("EffectSystem").GetComponent<EffectSystem>();
+        //StatManager 참조 초기화
+        _statManager = StatManager.Instance;
+    }
+    private void OnDestroy()
+    {
+        EventManager.Instance.RemoveEvent(HM.EventType.OnTurnEnd, this);
     }
 
     public void InitSkillData()
@@ -30,7 +34,7 @@ public partial class SkillSystem : MonoBehaviour, IEventListener
         Dictionary<int, SkillData> skillDataDict = new Dictionary<int, SkillData>();
 
         //어빌리티 데이터 캐싱 
-        for(int i =1;i<=DataManager.Instance.SkillDataCount;i++)
+        for (int i = 1; i <= DataManager.Instance.SkillDataCount; i++)
         {
             var data = DataManager.Instance.GetSkillData(i);
             skillDataDict.Add(i, data);
@@ -83,11 +87,11 @@ public partial class SkillSystem : MonoBehaviour, IEventListener
         List<Vector2Int> posList = new List<Vector2Int>();
         SkillData skillData = SkillDataDict[skillId];
 
-        Dictionary<CharacterIdentification, List<BaseCharacter>> stageCharacterDict = GameManager.Instance.CharacterController.StageCharacter;
+        Dictionary<CharacterIdentification, List<BaseCharacter>> stageCharacterDict = GameManager.Instance.BattleSystem.StageCharacter;
 
 
         //타겟타입이 셀프면 자기자신만 등록
-        if(skillData.TargetType==SkillTargetType.Self)
+        if (skillData.TargetType == SkillTargetType.Self)
         {
             posList.Add(characterPos);
         }
@@ -132,7 +136,8 @@ public partial class SkillSystem : MonoBehaviour, IEventListener
                         }
 
                         break;
-                    case SkillTargetType.Tile:
+                    case SkillTargetType.Cell:
+                    case SkillTargetType.Tile:  // Tile은 Cell과 동일하게 처리
 
                         posList.Add(characterPos + pos);
 
@@ -141,7 +146,7 @@ public partial class SkillSystem : MonoBehaviour, IEventListener
             }
         }
 
-            
+
 
         return posList;
     }
@@ -163,19 +168,18 @@ public partial class SkillSystem : MonoBehaviour, IEventListener
         SkillData skillData = SkillDataDict[skillId];
 
         //능력 인스턴스 생성
-        SkillInstance newInstance = new SkillInstance(this,_effectSystem ,skillData, source, skillPos);//SkillInstanceMaker.CreateSkillInstance(skillData, source, skillPos);
+        SkillInstance newInstance = new SkillInstance(this, _statManager, skillData, source, skillPos);//SkillInstanceMaker.CreateSkillInstance(skillData, source, skillPos);
 
-        
+
 
         newInstance.InvokeInstanceEvent(EffectInstanceEvent.Start);
-        
+
         //인스턴스 start 후 실행 해야 범위 공격이 보임;
         ShowSkillHit(newInstance);
 
         _skillIntanceList.AddLast(newInstance);
 
         source.CharacterStat.Ap -= skillData.ApCost;
-
     }
 
 
@@ -210,26 +214,29 @@ public partial class SkillSystem : MonoBehaviour, IEventListener
     }
     #endregion
 
-    #region Game EventHandle 
+    #region Game EventHandle
     private void OnTurnEnd()
     {
+        // Duration 처리는 DurableEffectRegistry가 담당
+        // 만료된 SkillInstance 리스트 정리만 수행
         LinkedListNode<SkillInstance> node = _skillIntanceList.First;
         while (node != null)
         {
             LinkedListNode<SkillInstance> nextNode = node.Next; // 다음 노드를 미리 저장
-            node.Value.OnGameEvent(HM.EventType.OnTurnEnd);
-            if (node.Value.Duration < 0)
+
+            // IsActive로 만료 확인 (Duration <= 0)
+            if (!node.Value.IsActive)
             {
                 _areaPrefabDict[node.Value].ClearAll();
                 _areaPrefabDict.Remove(node.Value);
 
-                node.Value.InvokeInstanceEvent(EffectInstanceEvent.End);
                 _skillIntanceList.Remove(node);
             }
+
             node = nextNode; // 다음 노드로 이동
         }
     }
-    
+
     public void BindCharacterEvent(BaseCharacter character)
     {
         character.OnPositionChanged += OnMovableEvent;
@@ -253,6 +260,34 @@ public partial class SkillSystem : MonoBehaviour, IEventListener
                 OnTurnEnd();
                 break;
         }
+    }
+    #endregion
+
+    #region Test Utility
+    /// <summary>
+    /// 테스트용: 모든 활성 스킬 인스턴스 정리
+    /// </summary>
+    public void ClearAllActiveSkills()
+    {
+        LinkedListNode<SkillInstance> node = _skillIntanceList.First;
+        while (node != null)
+        {
+            LinkedListNode<SkillInstance> nextNode = node.Next;
+
+            // 프리팹 정리
+            if (_areaPrefabDict.ContainsKey(node.Value))
+            {
+                _areaPrefabDict[node.Value].ClearAll();
+                _areaPrefabDict.Remove(node.Value);
+            }
+
+            // 스킬 인스턴스 제거
+            _skillIntanceList.Remove(node);
+
+            node = nextNode;
+        }
+
+        Debug.Log($"[SkillSystem] 모든 활성 스킬 인스턴스 정리 완료");
     }
     #endregion
 }

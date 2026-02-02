@@ -11,8 +11,8 @@ public interface IMovable
 
 public enum MovableEvent
 {
-    OnTileEnter,
-    OnTileExit,
+    OnCellEnter,
+    OnCellExit,
 }
 
 public interface IMovableEventEffectLogic

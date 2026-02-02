@@ -21,6 +21,9 @@ namespace HM
         OnSupplyGet,             // 보급품을 획득했을 때
         OnBattleStart,
         OnBattleFinish,
+        OnCellEnter,             // 캐릭터가 셀에 진입할 때
+        OnCellStay,              // 캐릭터가 셀에 머물 때
+        OnCellExit,              // 캐릭터가 셀을 떠날 때
         OnCharacterDamaged,
         OnPlayerHpChanged,
         OnCharacterTurnStart,

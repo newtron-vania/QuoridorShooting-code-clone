@@ -46,10 +46,11 @@ public class DropMoneyPanelUI : BaseUI
         // 버튼 이벤트 연결
         GetButton((int)Buttons.BackGround).gameObject.BindEvent(OnClickSkipButton);
 
-        _rewardPool = GameObject.Find("GameManager").GetComponent<RewardPool>();
+        // _rewardPool = GameObject.Find("GameManager").GetComponent<RewardPool>();
+        _rewardPool = UIManager.Instance.SceneUI.GetComponent<RewardPool>();
 
         _rewardPool.GetDropMoneyInstance(ref _value, ref _timer);
-        
+
         GetText((int)Texts.MoenyText).text = _value.ToString();
 
         StartCoroutine(CountDown());
@@ -64,8 +65,8 @@ public class DropMoneyPanelUI : BaseUI
     {
         if (_isCountDown) StopCoroutine(CountDown());
         Debug.Log($"[INFO] DropMoneyPanelUI::OnClickSkipButton - {gameObject.GetComponent<Canvas>().sortingOrder} : 닫힘");
-        UIManager.Instance.ShowPopupUI<RewardPopUpUI>();
         UIManager.Instance.ClosePopupUI(this);
+        UIManager.Instance.ShowPopupUI<RewardPopUpUI>();
     }
 
     IEnumerator CountDown()

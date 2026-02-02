@@ -6,15 +6,20 @@ using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
 
 
+// ⚠️ TEMPORARY: JSON 호환성을 위해 임시로 Enum 값 변경됨
+// TODO: JSON 데이터 정리 후 원래 값으로 복원 필요
 [JsonConverter(typeof(StringEnumConverter))]
 public enum EffectType
 {
+    None,
 
     //공용
     //대미지
     CommonSimpleDamage,
+    CommonSimpleDamage_FirstHit,
     CommonSimpleDamage_OnTurnStart,
-    CommonStatBaseDamage_Atk,
+    CommonStatBaseDamage_AttackDamage,  // 원본: CommonStatBaseDamage_Atk
+    
 
     //생성
     CommonStatuseffectCreation,
@@ -29,38 +34,47 @@ public enum EffectType
     CommonActionCountAdd_Move,
 
     //스텟 증감
-    CommonStatAdd_ApRecovery,
-    CommonStatAdd_Avd,
+    CommonStatAdd_ActionPointPerTurn,  // 원본: CommonStatAdd_ApRecovery
+    CommonStatAdd_DamageResistance,    // 원본: CommonStatAdd_Avd
 
-    //상태이상 제거 
+    //상태이상 제거
     CommonStatuseffectClear_ByTag,
 
     //힐
-    CommonSimpleHeal,
+    Cure,  // 원본: CommonSimpleHeal
 
     //Skill Logic, SkillInstance를 참조하여 효과 진행
     //대미지
     //힐
     //이동기
-    //능력 인스턴스 상태변경
-    SkillStateChange,
+    SkillTeleport, // 순간이동 효과
 
-
+    //셀 상태 변경
+    SkillCellStateChange,
 
     //Statuseffect Logic
     //생성
     StatuseffectDamageStatuseffectCreation_OnAttack,
     //스텟 증감
-    StatuseffectStatAdd_Avd,
-    StatuseffectStatAdd_Atk,
+    StatuseffectStatAdd_DamageResistance,  // 원본: StatuseffectStatAdd_Avd
+    StatuseffectStatAdd_AttackDamage,      // 원본: StatuseffectStatAdd_Atk
     //데미지
     StatuseffectDamage_OnTurnStart,
 
-
+    // ⚠️ LEGACY: 구버전 JSON 데이터 호환용 (사용하지 않음, None처럼 처리)
+    // TODO: JSON 데이터 정리 후 제거
+    Damage,
+    Attack,
+    ActionPoint,
+    Resistance,
+    Resistane,  // 오타까지 지원
+    Hp,
+    SupplyStatusEffectCreation,
 }
 [JsonConverter(typeof(StringEnumConverter))]
 public enum TargetType
 {
+    None,
     Self,
     Allies,
     TargetEnemy,

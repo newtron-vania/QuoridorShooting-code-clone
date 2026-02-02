@@ -5,35 +5,24 @@ using UnityEngine;
 public class SupplyStardust : BaseSupply
 {
     public override int ID => 18;
-    public override string Name => "별가루";
-    public override string Description => "2라운드 동안 모든 아군 캐릭터의 공격력이 1 증가한다.";
-    public override SupplymentData.SupplyType Type => SupplymentData.SupplyType.Enhance;
-    public override SupplymentData.SupplyTarget Target => SupplymentData.SupplyTarget.Allies;
-    public override SupplymentData.SupplyGrade Rank => SupplymentData.SupplyGrade.Normal;
-    public override int DurationRound => 2;
-    public override int EffectAmount => 1;
-    public override Sprite Image => null;
-    public override CharacterStat SupplyCharacterStat { get => _useTargetBaseCharacter; set => _useTargetBaseCharacter = value; }
+    public override BaseCharacter SupplyBaseCharacter { get => _useTargetBaseCharacter; set => _useTargetBaseCharacter = value; }
 
-    private CharacterStat _useTargetBaseCharacter;
+    private BaseCharacter _useTargetBaseCharacter;
     private int _saveTurn;
 
     public override void UseSupply()
     {
         base.UseSupply();
-        if (DurationRound != 0)
+        // 해당 방식 통합해서 판단하는 함수 제작하는게 나아보임
+        if (EffectDataList[0].Get<int>("Duration") != 0)
         {
             SupplyManager.Instance._saveDurationSupply.Add(this);
         }
-        foreach (BaseCharacter child in GameManager.Instance.CharacterController.StageCharacter[CharacterDefinition.CharacterIdentification.Player])
-        {
-            child.characterStat.Atk += EffectAmount;
-            _saveTurn = GameManager.Instance.Turn;
-        }
-        // TEMP : QA이후 업데이트 될 예정
+        _saveTurn = GameManager.Instance.Turn;
+        SupplyBaseCharacter.characterStat.Atk += EffectDataList[0].Get<int>("DamageValue");
         SupplyUseShowPanelUI supplyUseShowPanelUI = UIManager.Instance.ShowPopupUI<SupplyUseShowPanelUI>();
-        supplyUseShowPanelUI.SupplyName = Name;
-        supplyUseShowPanelUI.TargetName = "아군전체";
+        supplyUseShowPanelUI.SupplyID = ID;
+        supplyUseShowPanelUI.TargetName = SupplyBaseCharacter.characterStat.Name;
     }
 
     public override void TargetHighLight()
@@ -44,12 +33,10 @@ public class SupplyStardust : BaseSupply
     public override bool UpdateSupply()
     {
         base.UpdateSupply();
-        if (_saveTurn + (DurationRound * 2) == GameManager.Instance.Turn)
+        if (SupplyBaseCharacter == null) return false;
+        if (_saveTurn + (EffectDataList[0].Get<int>("Duration") * 2) == GameManager.Instance.Turn)
         {
-            foreach (BaseCharacter child in GameManager.Instance.CharacterController.StageCharacter[CharacterDefinition.CharacterIdentification.Player])
-            {
-                child.characterStat.Atk -= EffectAmount;
-            }
+            SupplyBaseCharacter.characterStat.Atk -= EffectDataList[0].Get<int>("DamageValue");
             return false;
         }
         return true;

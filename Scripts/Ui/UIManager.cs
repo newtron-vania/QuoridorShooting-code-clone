@@ -1,7 +1,4 @@
-using HM.Containers;
-using System.Collections;
 using System.Collections.Generic;
-using System.Resources;
 using UnityEngine;
 using UI.Util;
 
@@ -34,9 +31,11 @@ public enum UIName
     ToastItemUI,        // ToastPopUp 아이템 (프레임)
     EnemyTurnProgessUI, // 적턴 진행 중 팝업 창 (팝업)
     CharacterPopUpTextUI, // 캐릭터 토큰 피격, 회피, 회복 Text UI (프레임)
-    SelectSkillPosUI,   // 스킬 선택 (팝업)
+    SelectSkillPosUI,   // 스킬 선택 팝업 (팝업)
+    AlertPopUpUI,       // 경고 팝업 UI (팝업)
     RewardUI,           // 보상 확인 (팝업)
     RewardDropMoneyUI,  // 기본 돈 보상 (팝업)
+    RewardItemUI,       // 보상 아이템 UI (프레임)
 }
 
 public enum LogEvent
@@ -54,6 +53,8 @@ public class UIManager : Singleton<UIManager>
 
     private Stack<BaseUI> _popupStack = new Stack<BaseUI>(); // 오브젝트 말고 컴포넌트를 담음. 팝업 캔버스 UI 들을 담는다.
     private BaseUI _sceneUI = null; // 현재의 고정 캔버스 UI
+
+    public BaseUI SceneUI { get { return _sceneUI; } private set { _sceneUI = value; } }
 
     private const string _fallbackSpriteName = "임시적";
 
@@ -287,7 +288,7 @@ public class UIManager : Singleton<UIManager>
 
         foreach (Transform child in Root().transform)
         {
-            if(name == child.name)
+            if (name == child.name)
             {
                 sceneUI = child.gameObject.GetComponent<T>();
             }

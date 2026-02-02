@@ -5,22 +5,22 @@ namespace CharacterSystem
     public class CharacterStateMachine
     {
         public readonly EnemyCharacter Agent;
-        public readonly CharacterController CharacterController;
+        public readonly BattleSystem BattleSystem;
         
         public State[] states;
         public CharacterStateId currentState = CharacterStateId.Idle;
 
         public bool CanAttack => Agent.CanAttack && Agent.TargetCharacter != null;
-        public bool ShouldDamage => GameManager.Instance.TileController.GetDamageGraphTileCharacters(Agent.Position).Count > 0 ;
+        public bool ShouldDamage => GameManager.Instance.BattleSystem.CellManager.GetDamageGraphCellCharacters(Agent.Position).Count > 0 ;
         public bool IsMyHpLow => Agent.Hp * 5 <= Agent.MaxHp;
         public bool IsTargetHpLow => Agent.TargetCharacter != null && (Agent.TargetCharacter.Hp * 5 <= Agent.TargetCharacter.MaxHp);
 
         public bool CanUseSkill => Agent.CanUseSkill;
         
-        public CharacterStateMachine(BaseCharacter agent, CharacterController controller)
+        public CharacterStateMachine(BaseCharacter agent, BattleSystem controller)
         {
             this.Agent = agent as EnemyCharacter;
-            CharacterController = controller;
+            BattleSystem = controller;
             int numState = System.Enum.GetNames(typeof(CharacterStateId)).Length;
             states = new State[numState];
         }

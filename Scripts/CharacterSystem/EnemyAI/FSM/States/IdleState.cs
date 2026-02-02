@@ -43,7 +43,7 @@ namespace CharacterSystem
 
             // 공격 대상자가 있는지 확인
             _agentCharacter.SetAttackTargetCharacter(_agentCharacter.Playerable ? CharacterIdentification.Enemy : CharacterIdentification.Player);
-            GameManager.Instance.TileController.SetDamageFieldGraph(_stateMachine.CharacterController.StageCharacter[CharacterIdentification.Player]);
+            GameManager.Instance.BattleSystem.CellManager.SetDamageFieldGraph(_stateMachine.BattleSystem.StageCharacter[CharacterIdentification.Player]);
 
             // 공격 상태 전환 체크
             if (_stateMachine.CanAttack && _stateMachine.ShouldDamage && _stateMachine.IsMyHpLow && _stateMachine.IsTargetHpLow) _stateMachine.ChangeState(CharacterStateId.Attack);

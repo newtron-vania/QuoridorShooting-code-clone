@@ -56,7 +56,7 @@ namespace CharacterSystem
             int minDamage = Int32.MaxValue;
             int wallIndex = Int32.MinValue;
 
-            List<Vector2Int> characterPositions = _stateMachine.CharacterController.GetAllCharactersPosition();
+            List<Vector2Int> characterPositions = _stateMachine.BattleSystem.GetAllCharactersPosition();
             
             for (int i = 0; i < cadidatWallDatas.Count; i++)
             {
@@ -64,12 +64,12 @@ namespace CharacterSystem
                 GameManager.Instance.WallList.Add(wallData);
 
                 if (CheckWallIsStuck(characterPositions, GameManager.Instance.WallList)) continue;
-                
-                GameManager.Instance.TileController.SetDamageFieldGraph(_stateMachine.CharacterController.StageCharacter[
+
+                GameManager.Instance.BattleSystem.CellManager.SetDamageFieldGraph(_stateMachine.BattleSystem.StageCharacter[
                     _agentCharacter.Playerable ? CharacterIdentification.Player : CharacterIdentification.Enemy]);
-                
+
                 int damage = 0;
-                foreach (var oppositCharacter in GameManager.Instance.TileController.GetDamageGraphTileCharacters(_agentCharacter.Position))
+                foreach (var oppositCharacter in GameManager.Instance.BattleSystem.CellManager.GetDamageGraphCellCharacters(_agentCharacter.Position))
                 {
                     damage += oppositCharacter.Atk;
                 }
@@ -85,7 +85,7 @@ namespace CharacterSystem
 
             if (wallIndex < 0) return false;
 
-            _stateMachine.CharacterController.SetWallInstantly(cadidatWallDatas[wallIndex].Position, cadidatWallDatas[wallIndex].IsHorizontal);
+            _stateMachine.BattleSystem.SetWallInstantly(cadidatWallDatas[wallIndex].Position, cadidatWallDatas[wallIndex].IsHorizontal);
             _agentCharacter.Build();
             return true;
         }

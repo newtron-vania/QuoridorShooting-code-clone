@@ -6,13 +6,38 @@ using UnityEngine;
 // 미리 이 보급품에 도달 했을 때 어떤 보급품을 줄지 정해둘 예정
 public class SupplyAttach : MonoBehaviour
 {
-    // TODO : 만약에 맵 그래프 형태로 보급품을 저장 후 사용한다면 해당 함수 수정 필요
-    private void OnTriggerEnter2D(Collider2D other)
+    public float StayTime = 0.5f; // 머무를 시간
+    private float timer = 0f;
+    private bool _isPlayerInside = false;
+
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (other.transform.tag == "Player")
+        if (collision.CompareTag("Player"))
         {
-            UIManager.Instance.ShowPopupUI<SupplyShowPanelUI>();
-            Destroy(gameObject);
+            _isPlayerInside = true;
+            timer = 0f;
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player"))
+        {
+            _isPlayerInside = false;
+            timer = 0f;
+        }
+    }
+
+    private void Update()
+    {
+        if (_isPlayerInside)
+        {
+            timer += Time.deltaTime;
+            if (timer >= StayTime)
+            {
+                UIManager.Instance.ShowPopupUI<SupplyShowPanelUI>();
+                Destroy(gameObject);
+            }
         }
     }
 }

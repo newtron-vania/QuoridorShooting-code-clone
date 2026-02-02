@@ -6,16 +6,10 @@ using UnityEngine;
 
 public abstract class BaseSupply : MonoBehaviour
 {
-    public abstract string Name { get; }
     public abstract int ID { get; }                         // 보급품 아이디
-    public abstract string Description { get; }             // 보급품 설명
-    public abstract SupplymentData.SupplyType Type { get; }     // 보급품 종류
-    public abstract SupplymentData.SupplyTarget Target { get; } // 보급품 적용 대상
-    public abstract SupplymentData.SupplyGrade Rank { get; }     // 보급품 랭크
-    public abstract int DurationRound { get; }              // 보급품 지속시간
-    public abstract int EffectAmount { get; }               // 해당 보급품 증가 수치
-    public abstract Sprite Image { get; }                   // 보급품 이미지
-    public abstract CharacterStat SupplyCharacterStat { get; set; }
+    public abstract BaseCharacter SupplyBaseCharacter { get; set; }
+
+    public List<EffectData> EffectDataList;
 
     private void Start()
     {
@@ -23,9 +17,10 @@ public abstract class BaseSupply : MonoBehaviour
 
     public virtual void UseSupply()
     {
-        if (Target == SupplymentData.SupplyTarget.TargetChar || Target == SupplymentData.SupplyTarget.TargetEnemy)
+        TargetType target = DataManager.Instance.GetSupplyData(ID).EffectDataList[0].Target;
+        if (target == TargetType.Allies || target == TargetType.TargetEnemy)
         {
-            SupplyCharacterStat = GameManager.Instance.CharacterController.CurrentSelectBaseCharacter.characterStat;
+            SupplyBaseCharacter = GameManager.Instance.BattleSystem.CurrentSelectBaseCharacter;
         }
 
         // 보급품을 전부 사용했을 때
@@ -40,17 +35,18 @@ public abstract class BaseSupply : MonoBehaviour
     // 보급품 선택 후 사용가능한 기물 확인
     public virtual void TargetHighLight()
     {
+        TargetType target = DataManager.Instance.GetSupplyData(ID).EffectDataList[0].Target;
         // 선택해야하는 기물
-        if (Target == SupplymentData.SupplyTarget.TargetChar || Target == SupplymentData.SupplyTarget.TargetEnemy)
+        if (target == TargetType.Allies || target == TargetType.TargetEnemy)
         {
             SupplyManager.Instance._currentUseSupply = ID;
-            SupplyManager.Instance._supplyTarget = Target;
-            GameManager.Instance.CharacterController.TouchType = HM.Utils.TouchUtils.TouchType.UseSupply;
+            SupplyManager.Instance._supplyTarget = target;
+            GameManager.Instance.BattleSystem.TouchType = HM.Utils.TouchUtils.TouchType.UseSupply;
 
             // 지정이 필요한 보급품일 경우 하이라이팅  실시
-            if (Target == SupplymentData.SupplyTarget.TargetChar)
+            if (target == TargetType.Allies)
             {
-                foreach (BaseCharacter child in GameManager.Instance.CharacterController.StageCharacter[CharacterDefinition.CharacterIdentification.Player])
+                foreach (BaseCharacter child in GameManager.Instance.BattleSystem.StageCharacter[CharacterDefinition.CharacterIdentification.Player])
                 {
                     UIManager.Instance.MakeHighlighting<TokenHighLighting>(child.CharacterObject.gameObject.transform);
                 }
@@ -58,7 +54,7 @@ public abstract class BaseSupply : MonoBehaviour
             }
             else
             {
-                foreach (BaseCharacter child in GameManager.Instance.CharacterController.StageCharacter[CharacterDefinition.CharacterIdentification.Enemy])
+                foreach (BaseCharacter child in GameManager.Instance.BattleSystem.StageCharacter[CharacterDefinition.CharacterIdentification.Enemy])
                 {
                     UIManager.Instance.MakeHighlighting<TokenHighLighting>(child.CharacterObject.gameObject.transform);
                 }
@@ -68,12 +64,17 @@ public abstract class BaseSupply : MonoBehaviour
         // 선택하지 않고 즉시 사용되는 보급품들
         else
         {
+            if (target == TargetType.Self && GameManager.Instance.BattleSystem.CurrentSelectBaseCharacter.characterStat != null)
+            {
+                SupplyBaseCharacter = GameManager.Instance.BattleSystem.CurrentSelectBaseCharacter;
+            }
             UseSupply();
         }
     }
 
     public virtual void InitSupply()
     {
+        EffectDataList = DataManager.Instance.GetSupplyData(ID).EffectDataList;
         // 아니면 사용가능한 하이라이팅 기물 보여주기
         TargetHighLight();
     }

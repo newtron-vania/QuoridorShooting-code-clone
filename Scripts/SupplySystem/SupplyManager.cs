@@ -1,14 +1,8 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEditor;
-using DG.Tweening;
 using HM;
-using HM.Utils;
 using System.IO;
 using System.Reflection;
-using CharacterDefinition;
 
 public class SupplyManager : MonoBehaviour, IEventListener
 {
@@ -18,6 +12,60 @@ public class SupplyManager : MonoBehaviour, IEventListener
     private const string SUPPLY_DROP_PREFAB_PATH = "Supply/SupplyPrefab";
 
     private int _selectedSupplyItem = 0;
+
+    public SupplyShowPanelUI SupplyShowPanelUI = null;
+    // public CharacterController SupplyCharacterController;
+    public BaseSupply CurrentUseBaseSupply;
+
+    // 테스트 용 public 나중에 private로 수정할 예정 + GameManger쪽으로 옮길 예정
+    public Dictionary<int, int> _supplyInventory = new Dictionary<int, int>();
+    public List<BaseSupply> _saveDurationSupply = new List<BaseSupply>();
+    public TargetType _supplyTarget = TargetType.None;
+    public int _currentUseSupply = -1;
+    // 미리 캐싱
+    public Dictionary<int, System.Type> _supplyDataType = new Dictionary<int, System.Type>();
+    // 보급품 상태이상용 statManager 받아오기
+    private StatManager _statManager;
+
+    private List<string> _supplyEditName => new List<string>
+    {
+        string.Empty,
+        "SupplyPoisonousMushroom",
+        "SupplyFirePotion",
+        "SupplyRootCane",
+        "SupplyIceCrystal",
+        "SupplyAmuletOfPower",
+        "SupplySteelShield",
+        "SupplyGuardian",
+        "SupplyIronPotion",
+        "SupplyImmortalPotion",
+        "SupplyElixirOfStrength",
+        "SupplyProtectionLetter",
+        "SupplyPieceOfCheese",
+        "SupplyRyeBread",
+        "SupplyHolyWater",
+        "SupplyGoldenHerb",
+        "SupplyNanobotCapsule",
+        "SupplyMaxPotion",
+        "SupplyStardust",
+        "SupplyBluebutterflyBrooch",
+        "SupplyPurgatory",
+        "SupplyWoodenPipe",
+    };
+
+    // 인벤에 있는 보급품의 총량 계산
+    public int SupplyInventoryValueCount
+    {
+        get
+        {
+            int count = 0;
+            foreach (int value in _supplyInventory.Values)
+            {
+                count += value;
+            }
+            return count;
+        }
+    }
 
     // 보급품 획득 후 3가지 중 선택된 아이디 1개
     public int SelectedSupplyItem
@@ -33,31 +81,6 @@ public class SupplyManager : MonoBehaviour, IEventListener
         get
         {
             return _selectedSupplyItem;
-        }
-    }
-    public SupplyShowPanelUI SupplyShowPanelUI = null;
-    // public CharacterController SupplyCharacterController;
-    public BaseSupply CurrentUseBaseSupply;
-
-    // 테스트 용 public 나중에 private로 수정할 예정 + GameManger쪽으로 옮길 예정
-    public Dictionary<int, int> _supplyInventory = new Dictionary<int, int>();
-    public List<BaseSupply> _saveDurationSupply = new List<BaseSupply>();
-    public SupplymentData.SupplyTarget _supplyTarget = SupplymentData.SupplyTarget.None;
-    public int _currentUseSupply = -1;
-    // 미리 캐싱
-    public Dictionary<int, System.Type> _supplyDataType = new Dictionary<int, System.Type>();
-
-    // 인벤에 있는 보급품의 총량 계산
-    public int SupplyInventoryValueCount
-    {
-        get
-        {
-            int count = 0;
-            foreach (int value in _supplyInventory.Values)
-            {
-                count += value;
-            }
-            return count;
         }
     }
 
@@ -85,8 +108,8 @@ public class SupplyManager : MonoBehaviour, IEventListener
     }
     private void Awake()
     {
-        _supplyInventory.Add(9, 2);
-        //SupplyCaching();
+        _supplyInventory.Add(1, 2);
+        SupplyCaching();
         if (_instance != null)
         {
             Destroy(gameObject);
@@ -102,6 +125,7 @@ public class SupplyManager : MonoBehaviour, IEventListener
     {
         EventManager.Instance.AddEvent(HM.EventType.OnTurnStart, this);
         EventManager.Instance.AddEvent(HM.EventType.OnTurnEnd, this);
+        _statManager = StatManager.Instance;
     }
 
     public void OnEvent(HM.EventType eventType, Component sender, object param = null)
@@ -115,28 +139,24 @@ public class SupplyManager : MonoBehaviour, IEventListener
             case HM.EventType.OnTurnEnd:
                 CheckSupplyQueue();
                 break;
-
-            //case HM.EventType.OnRoundEnd:
-            //    ResetSupplyInventory();
-            //    break;
         }
     }
-
-    // 스테이지 초기화 시 인벤토리 리셋 (해당 부분 기획서 수정으로 리셋 타이밍 변경 예정)
-    //public void ResetSupplyInventory()
-    //{
-    //    _supplyInventory.Clear();
-    //}
 
     public void SupplyCaching()
     {
         for(int i = 1; i < DataManager.Instance.SupplyDatasCount; i++)
         {
-            string supplyName = DataManager.Instance.GetSupplyData(i).EditName;
+            string supplyName = GetSupplyEditName(i);
 
             Assembly assembly = Assembly.GetExecutingAssembly();
             _supplyDataType.Add(i, assembly.GetType(supplyName));
         }
+    }
+    
+    // 임시코드 변경 예정
+    public string GetSupplyEditName(int SupplyID)
+    {
+        return _supplyEditName[SupplyID];
     }
 
     // 적이 죽었을 때 죽은 자리에 보급품 생성
@@ -158,7 +178,7 @@ public class SupplyManager : MonoBehaviour, IEventListener
             do
             {
                 spawnPos = new Vector2Int(Random.Range(-4, 5), Random.Range(-4, 5));
-            } while (CanSpawnSupplyBox(spawnPos) || spawnPoses.Contains(spawnPos)); // 타일위에 아군, 적 기물이 있는지 확인
+            } while (CanSpawnSupplyBox(spawnPos) || spawnPoses.Contains(spawnPos)); // 셀위에 아군, 적 기물이 있는지 확인
 
             // 보물상자 설치
             spawnPoses.Add(spawnPos); // 보물상자 위치 저장
@@ -172,7 +192,7 @@ public class SupplyManager : MonoBehaviour, IEventListener
     // ID 번호를 받아 기술 String를 이용해 인스턴스화 실시
     public void UseSupplyItem(int id)
     {
-        string supplyName = DataManager.Instance.GetSupplyData(id).EditName;
+        string supplyName = GetSupplyEditName(id);
 
         object obj = System.Activator.CreateInstance(_supplyDataType[id]);
 
@@ -199,7 +219,57 @@ public class SupplyManager : MonoBehaviour, IEventListener
             if (!child.UpdateSupply())
             {
                 delSupplyItem.Add(child);
-                Debug.Log($"[INFO]SupplyManager(CheckSupplyQueue) - {child.Name} 사용이 끝났습니다.");
+                Debug.Log($"[INFO]SupplyManager(CheckSupplyQueue) - {DataManager.Instance.GetSupplyData(child.ID).Name} 사용이 끝났습니다.");
+            }
+        }
+
+        // 사용이 끝난 보급품 리스트에서 삭제
+        foreach (BaseSupply child in delSupplyItem)
+        {   
+            _saveDurationSupply.Remove(child);
+        }
+    }
+
+    // 보급품을 사용할 수 있는지 확인
+    public bool CanUseSupply(int ID, int targetID)
+    {
+        bool returnDamageValue = true;
+        BaseSupply saveSupply = null;
+        foreach (BaseSupply child in _saveDurationSupply)
+        {
+            if (child.ID == ID && child.SupplyBaseCharacter.characterStat.Index == targetID)
+            {
+                // 중복 사용시 이전 지속시간 갱신
+                saveSupply = child;
+                returnDamageValue = false;
+            }
+        }
+        // 기존에 있던 보급품 효과를 제거하고 새로운 보급품으로 덮어씌우기
+        if (!returnDamageValue)
+        {
+            _saveDurationSupply.Remove(saveSupply);
+            returnDamageValue = true;
+        }
+        return returnDamageValue;
+    }
+
+    // 타격시 상태이상 효과 적용
+    public void CheckStatusSupply(BaseCharacter source, BaseCharacter target)
+    {
+        // 보급품에 아무것도 없으면 예외처리
+        if (_saveDurationSupply.Count == 0) return;
+
+        List<BaseSupply> delSupplyItem = new List<BaseSupply>();
+        foreach (BaseSupply child in _saveDurationSupply)
+        {
+            Debug.Log("상태이상 적용 확인 111");
+            // 공격을 시도하는 BaseCharacter가 동일할 때 + 공격 대상일 경우
+            if (child.EffectDataList[1].Target == TargetType.TargetEnemy && child.SupplyBaseCharacter == source)
+            {
+                delSupplyItem.Add(child);
+                StatuseffectInstance newInstance = new StatuseffectInstance(_statManager, DataManager.Instance.GetStatuseffectData(child.EffectDataList[1].Get<int>("StatuseffectId")), source, target, child.EffectDataList[1]);
+                newInstance.InvokeInstanceEvent(EffectInstanceEvent.Start);
+                Debug.Log("상태이상 적용 확인 222");
             }
         }
 
@@ -210,57 +280,10 @@ public class SupplyManager : MonoBehaviour, IEventListener
         }
     }
 
-    // 피해감소에 관련된 Supply 사용시 확인
-    public int CheckDefenseSupply(GameObject targetToken)
-    {
-        Debug.Log($"[INFO]SupplyManager(CheckDefenseSupply) - {targetToken.name}");
-        if (_saveDurationSupply.Count == 0) return 0;
-
-        int amount = 0;
-        foreach (BaseSupply child in _saveDurationSupply)
-        {
-            if (child.ID == 11)
-            {
-                amount = child.EffectAmount;
-            }
-            else if (child.Type == SupplymentData.SupplyType.Defense)
-            {
-                if (child.ID != 10 && child.SupplyCharacterStat.Index == int.Parse(targetToken.name.Split("_")[1]))
-                {
-                    amount = child.EffectAmount;
-                }
-            }
-        }
-        return amount;
-    }
-
-    // 보급품을 사용할 수 있는지 확인
-    public bool CanUseSupply(int ID, int targetID)
-    {
-        bool returnValue = true;
-        BaseSupply saveSupply = null;
-        foreach (BaseSupply child in _saveDurationSupply)
-        {
-            if (child.ID == ID && child.SupplyCharacterStat.Index == targetID)
-            {
-                // 중복 사용시 이전 지속시간 갱신
-                saveSupply = child;
-                returnValue = false;
-            }
-        }
-        // 기존에 있던 보급품 효과를 제거하고 새로운 보급품으로 덮어씌우기
-        if (!returnValue)
-        {
-            _saveDurationSupply.Remove(saveSupply);
-            returnValue = true;
-        }
-        return returnValue;
-    }
-
     private bool CanSpawnSupplyBox(Vector2Int pos)
     {
         // 해당 위치에 적, 아군 기물이 있을경우
-        if (GameManager.Instance.CharacterController.GetObjectToPosition(GameManager.ToWorldPosition(pos)))
+        if (GameManager.Instance.BattleSystem.GetObjectToPosition(GameManager.ToWorldPosition(pos)))
         {
             return true;
         }

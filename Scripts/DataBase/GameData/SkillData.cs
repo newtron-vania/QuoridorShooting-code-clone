@@ -11,7 +11,8 @@ public enum SkillTargetType
     Ally,         // 캐릭터(아군)
     Enemy,        // 캐릭터(적군)
     All,          // 캐릭터(전부)
-    Tile          // 타일(영역)
+    Cell,          // 셀(영역)
+    Tile
 }
 [JsonConverter(typeof(StringEnumConverter))]
 public enum SkillType

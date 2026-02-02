@@ -291,7 +291,7 @@ GameObject:
   - component: {fileID: 5511705879858400069}
   - component: {fileID: 5511705879858400070}
   m_Layer: 5
-  m_Name: temNameText
+  m_Name: ItemNameText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -425,7 +425,7 @@ GameObject:
   - component: {fileID: 5511705881004313059}
   - component: {fileID: 5511705881004313057}
   - component: {fileID: 5511705881004313058}
-  - component: {fileID: -3698719455162210074}
+  - component: {fileID: 4596240936866319177}
   m_Layer: 5
   m_Name: RewardItemUI
   m_TagString: Untagged
@@ -493,7 +493,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &-3698719455162210074
+--- !u!114 &4596240936866319177
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -502,10 +502,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 5511705881004313060}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 125e1ffd6d9337e44a8d55aadef1c4f8, type: 3}
+  m_Script: {fileID: 11500000, guid: d2aed8f298b6fe2438236607d47790e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SupplyId: 0
+  ParentRewardPool: {fileID: 0}
 --- !u!1 &5910729194138844645
 GameObject:
   m_ObjectHideFlags: 0

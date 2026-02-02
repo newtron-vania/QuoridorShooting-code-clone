@@ -39,7 +39,7 @@ public class PlayerInputButtonData : MonoBehaviour
         // 확정 버튼 처리
         if (gameObject.CompareTag("PlayerUIConfirm"))
         {
-            IsActive = GameManager.Instance.CharacterController.IsConfirm;
+            IsActive = GameManager.Instance.BattleSystem.IsConfirm;
         }
     }
 }

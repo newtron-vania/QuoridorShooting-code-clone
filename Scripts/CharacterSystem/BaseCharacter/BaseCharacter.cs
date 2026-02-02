@@ -4,16 +4,15 @@ using UnityEngine;
 using CharacterDefinition;
 using EventType = HM.EventType;
 using HM;
-using UnityEditor.IMGUI.Controls;
 using Random = UnityEngine.Random;
 
-public partial class BaseCharacter : IEventListener , IMovable
+public partial class BaseCharacter : IEventListener, IMovable
 {
-    protected readonly CharacterController Controller;
+    protected readonly BattleSystem Controller;
     protected readonly SkillSystem SkillSystem;
 
-    public delegate void ValueChangedHandler(int newValue);
-    public event ValueChangedHandler OnDamage;
+    public delegate void DamageValueChangedHandler(int newDamageValue);
+    public event DamageValueChangedHandler OnDamage;
 
     public QuoridorCharacterObject CharacterObject { get; private set; }
     private List<PrefabControllerBase> _moveAttackPreviewList = new();
@@ -31,6 +30,10 @@ public partial class BaseCharacter : IEventListener , IMovable
     {
         get
         {
+            // GroupModifier: ActionRestriction 우선 확인
+            if (StatuseffectController.HasRestriction(ActionRestrictionFlags.CannotBuild))
+                return false;
+
             bool shouldAp = characterStat.Ap >= Controller.NeededBuildPoint;
             bool shouldBuildCount = false;
             switch (Playerable)
@@ -55,6 +58,10 @@ public partial class BaseCharacter : IEventListener , IMovable
         // 어빌리티 참조 안됨
         get
         {
+            // GroupModifier: ActionRestriction 우선 확인
+            if (StatuseffectController.HasRestriction(ActionRestrictionFlags.CannotUseSkill))
+                return false;
+
             return _skillSystem.CheckSkillCostEnough(SkillId, this);
         }
         // set
@@ -68,6 +75,11 @@ public partial class BaseCharacter : IEventListener , IMovable
     {
         get
         {
+            // GroupModifier: ActionRestriction 우선 확인
+            if (StatuseffectController.HasRestriction(ActionRestrictionFlags.CannotAttack))
+                return false;
+
+            // 기존 로직: AdditionalAttackActionCount 체크
             int totalCanAttackCount = CanAttackCount + StatuseffectController.AdditionalAttackActionCount;
             return (Mathf.Max(0, totalCanAttackCount) > 0);
         }
@@ -86,6 +98,11 @@ public partial class BaseCharacter : IEventListener , IMovable
     {
         get
         {
+            // GroupModifier: ActionRestriction 우선 확인
+            if (StatuseffectController.HasRestriction(ActionRestrictionFlags.CannotMove))
+                return false;
+
+            // 기존 로직: AdditionalMoveActionCount 체크
             int totalCanMoveCount = _canMoveCount + StatuseffectController.AdditionalMoveActionCount;
             return (Mathf.Max(0, totalCanMoveCount) > 0);
         }
@@ -115,7 +132,7 @@ public partial class BaseCharacter : IEventListener , IMovable
     public Vector2Int PrevPosition => _prevPosition;
 
     public Action<IMovable> OnPositionChanged { get; set; }
-    
+
     public Vector2Int Position
     {
         get
@@ -165,7 +182,7 @@ public partial class BaseCharacter : IEventListener , IMovable
         CharacterObject = characterObject;
         characterObject.Init(this);
     }
-    public BaseCharacter(CharacterController controller)
+    public BaseCharacter(BattleSystem controller)
     {
         Controller = controller;
         SkillSystem = controller.SkillSystem;
@@ -182,7 +199,7 @@ public partial class BaseCharacter : IEventListener , IMovable
     private void ShowDebugLog()
     {
         Debug.Log($"[INFO] BaseCharacter::ShowDebugLog : skillSystem active is {_skillSystem is not null}");
-
+        characterStat.ToString();
         // Debug.Log($"[INFO] BaseCharacter::ShowDebugLog : skill name is {_skillSystem.SkillDict[SkillId].Name}");
     }
 
@@ -243,6 +260,9 @@ public partial class BaseCharacter : IEventListener , IMovable
         isDead = true;
     }
 
+    // Partial method declaration for GroupModifier extension
+    partial void OnDamageDealt(int damageDealt);
+
     public virtual int TakeDamage(BaseCharacter baseCharacter, int damage = 0)
     {
         Debug.LogFormat("[INFO] BaseCharacter::TakeDamage - {0} 캐릭터 TakeDamage함수 실행", CharacterName);
@@ -261,11 +281,19 @@ public partial class BaseCharacter : IEventListener , IMovable
         }
         else
         {
-            int expectDamge = (damage - SupplyManager.Instance.CheckDefenseSupply(CharacterObject.gameObject));
+            int expectDamge = damage;
             expectDamge = (expectDamge < 0 ? 0 : expectDamge);
             characterStat.Hp = characterStat.Hp - expectDamge;
             OnDamage?.Invoke(expectDamge);
+            // 보급품 효과 적용
+            SupplyManager.Instance.CheckStatusSupply(baseCharacter, this);
             UIManager.Instance.InputLogEvent(LogEvent.Attack, baseCharacter.CharacterObject.gameObject, CharacterObject.gameObject);
+
+            // Track damage dealt for Lifedrain effect (GroupModifier extension)
+            if (baseCharacter != null)
+            {
+                baseCharacter.OnDamageDealt(expectDamge);
+            }
 
             if (characterStat.Hp <= 0)
             {
@@ -314,7 +342,7 @@ public partial class BaseCharacter : IEventListener , IMovable
     public virtual void OnTurnEnd()
     {
         // PlayerActionUI playerActionUi = currentSelectTransform.GetChild(0).GetChild(0).GetComponent<PlayerActionUI>();
-        
+
         StatuseffectController.InvokeGameEvent(HM.EventType.OnTurnEnd);
     }
 
@@ -408,7 +436,7 @@ public partial class BaseCharacter : IEventListener , IMovable
 
         foreach (var preview in _moveAttackPreviewList)
         {
-            if(preview is GlowBoxPrefab) PrefabMakerSystem.Instance.GetObjectMaker(MakerType.CharacterPositionPreview).ReturnController(preview);
+            if (preview is GlowBoxPrefab) PrefabMakerSystem.Instance.GetObjectMaker(MakerType.CharacterPositionPreview).ReturnController(preview);
             else PrefabMakerSystem.Instance.GetObjectMaker(MakerType.MovePreview).ReturnController(preview);
         }
         _moveAttackPreviewList.Clear();
@@ -494,7 +522,7 @@ public partial class BaseCharacter : IEventListener , IMovable
     }
     #endregion
 
-    #region BaseCharacterValueControlFunc
+    #region BaseCharacterDamageValueControlFunc
 
     public void ReduceAttackCount()
     {

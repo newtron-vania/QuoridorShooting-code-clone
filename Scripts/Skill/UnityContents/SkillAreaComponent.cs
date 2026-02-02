@@ -40,7 +40,7 @@ public class SkillAreaComponent : MonoBehaviour
         gameObject.SetActive(true);
     }
 
-    //ToDo: 타일에 중복되는 상태가 생기면 추가 처리
+    //ToDo: 셀에 중복되는 상태가 생기면 추가 처리
     public void Reset()
     {
         _spriteRenderer.sprite = null;

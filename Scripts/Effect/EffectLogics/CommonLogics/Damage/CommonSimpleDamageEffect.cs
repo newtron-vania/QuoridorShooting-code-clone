@@ -33,7 +33,7 @@ public class CommonSimpleDamageEffect : IBaseEffectLogic
         foreach (var target in targetList)
         {
             var character = target.GetEffectable<BaseCharacter>();
-            character.TakeDamage(effectInstance.Source, effectData.Get<int>("Damage"));
+            character.TakeDamage(effectInstance.Source, effectData.Get<int>("DamageValue")); // 현재 SkillData Param 값 : DamageValue
         }
     }
 }

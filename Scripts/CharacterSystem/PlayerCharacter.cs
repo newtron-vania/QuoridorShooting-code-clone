@@ -27,7 +27,7 @@ public partial class PlayerCharacter : BaseCharacter
     int[] wallInfo = new int[3]; // 벽 위치 정보, 회전 정보 저장
     private Vector2 _wallStartPos = new Vector2(-50, -50);
 
-    public PlayerCharacter(CharacterController controller) : base(controller) { Playerable = true;/*임시?*/ } 
+    public PlayerCharacter(BattleSystem controller) : base(controller) { Playerable = true;/*임시?*/ } 
 
     public override void Start()
     {
@@ -63,7 +63,6 @@ public partial class PlayerCharacter : BaseCharacter
                 break;
 
             case PlayerControlStatus.Move:
-                _canMoveCount = 1;
                 SetPreviewMove();
                 break;
 
@@ -71,7 +70,6 @@ public partial class PlayerCharacter : BaseCharacter
                 break;
 
             case PlayerControlStatus.Attack:
-                CanAttackCount = 1;
                 SetPreviewAttack();
                 break;
 
@@ -102,7 +100,7 @@ public partial class PlayerCharacter : BaseCharacter
                 if (previewHit.transform.CompareTag("PlayerAttackPreview")) // 클릭좌표에 플레이어공격미리보기가 있다면
                 {
                     Vector2Int attackPosition = GameManager.ToGridPosition(previewHit.transform.position);
-                    BaseCharacter hitCharacter = GameManager.Instance.CharacterController.StageCharacter[CharacterIdentification.Enemy].Where(c => c.Position == attackPosition).FirstOrDefault();
+                    BaseCharacter hitCharacter = GameManager.Instance.BattleSystem.StageCharacter[CharacterIdentification.Enemy].Where(c => c.Position == attackPosition).FirstOrDefault();
                     if (hitCharacter != null)
                     {
                         Controller.SaveTargetBaseCharacter = hitCharacter;
@@ -171,7 +169,7 @@ public partial class PlayerCharacter : BaseCharacter
                     }
                     _playerMovePreviews.Clear();
                     // 능력 실행
-                    SkillSystem.ExecuteSkill(SkillId,  GameManager.ToGridPosition(previewHit.transform.position), this);
+                    SkillSystem.ExecuteSkill(SkillId, GameManager.ToGridPosition(previewHit.transform.position), this);
 
                     Controller.PreviewWall.SetActive(false);
 
@@ -190,12 +188,7 @@ public partial class PlayerCharacter : BaseCharacter
             else //다른 곳 클릭 시 다시 선택으로
             {
                 Controller.PlayerControlStatus = PlayerControlStatus.None;
-                // if (isDisposableMove)
-                // {
-                //     moveCount--;
-                //     isDisposableMove = false;
-                // }
-                //ActionUi.ActivateUI();
+                UIManager.Instance.ClosePopupUI();
                 ResetPreview();
             }
         }
@@ -206,12 +199,12 @@ public partial class PlayerCharacter : BaseCharacter
         if (GameManager.Instance.playerWallCount >= GameManager.Instance.playerMaxBuildWallCount) return;
         if (Controller.TouchState == TouchUtils.TouchState.Began || Controller.TouchState == TouchUtils.TouchState.Moved || Controller.TouchState == TouchUtils.TouchState.Ended)
         {
-            GameManager.Instance.WallHighlightingParent.SetActive(false);
+            Controller.WallHighlightingParent.SetActive(false);
             SetPreviewWall();
         }
         else
         {
-            GameManager.Instance.WallHighlightingParent.SetActive(true);
+            Controller.WallHighlightingParent.SetActive(true);
         }
         base.Build();
     }
@@ -220,6 +213,8 @@ public partial class PlayerCharacter : BaseCharacter
     {
         base.ResetPreview();
         // 미리보기들 비활성화
+
+        Controller.WallHighlightingParent.SetActive(false);
 
         for (int i = 0; i < _playerMovePreviews.Count; i++)
         {
@@ -234,7 +229,7 @@ public partial class PlayerCharacter : BaseCharacter
             PrefabMakerSystem.Instance.GetObjectMaker(MakerType.AttackPreview).ReturnController(_playerAttackPreviews[i]);
         }
         _playerAttackPreviews.Clear();
-        // 기존에 이동 위치 저장 타일 초기화
+        // 기존에 이동 위치 저장 셀 초기화
         Controller.SaveCurrentTargetPoint = null;
         Controller.SaveTargetBaseCharacter = null;
         Controller.SaveCurrentAbilityPoint = null;
@@ -423,7 +418,7 @@ public partial class PlayerCharacter : BaseCharacter
             var prefabController = PrefabMakerSystem.Instance.GetObjectMaker(MakerType.BlockedPreview).GetController(pos);
             _playerAttackPreviews.Add(prefabController);
         }
-        
+
         for (int i = 0; i < targetablePositions.Count; i++)
         {
             var prefabController = PrefabMakerSystem.Instance.GetObjectMaker(MakerType.SkillPreview).GetController(targetablePositions[i]);
@@ -462,7 +457,7 @@ public partial class PlayerCharacter : BaseCharacter
         List<Vector2Int> abilityRanges = new List<Vector2Int>();
         abilityRanges = DataManager.Instance.GetRangeData(DataManager.Instance.GetSkillData(SkillId).TargetRangeId);
 
-        Vector2Int useAbilityPoint = GameManager.ToGridPosition(GameManager.Instance.CharacterController.SaveCurrentAbilityPoint.position);
+        Vector2Int useAbilityPoint = GameManager.ToGridPosition(GameManager.Instance.BattleSystem.SaveCurrentAbilityPoint.position);
 
         for (int i = 0; i < abilityRanges.Count; i++)
         {
@@ -502,7 +497,7 @@ public partial class PlayerCharacter : BaseCharacter
                 {
                     Controller.PreviewWall.transform.position = GameManager.GridSize * new Vector3(Mathf.Floor(touchGridPosition.x) + 0.5f, Mathf.Floor(touchGridPosition.y) + 0.5f, 0);
                     Controller.PreviewWall.transform.rotation = Quaternion.Euler(0, 0, 0); // 위치 이동 및 회전
-                                                                                                     // 벽 위치 정보, 회전 정보 저장
+                                                                                           // 벽 위치 정보, 회전 정보 저장
                     _wallStartPos.x = Mathf.FloorToInt((Controller.PreviewWall.transform.position / GameManager.GridSize).x);
                     _wallStartPos.y = Mathf.FloorToInt((Controller.PreviewWall.transform.position / GameManager.GridSize).y);
                     Controller.PreviewWall.SetActive(true); // 활성화
@@ -511,7 +506,7 @@ public partial class PlayerCharacter : BaseCharacter
                 {
                     Controller.PreviewWall.transform.position = GameManager.GridSize * new Vector3(Mathf.Floor(touchGridPosition.x) + 0.5f, Mathf.Floor(touchGridPosition.y) + 0.5f, 0);
                     Controller.PreviewWall.transform.rotation = Quaternion.Euler(0, 0, 90);// 위치 이동 및 회전
-                                                                                                     // 벽 위치 정보, 회전 정보 저장
+                                                                                           // 벽 위치 정보, 회전 정보 저장
                     _wallStartPos.x = Mathf.FloorToInt((Controller.PreviewWall.transform.position / GameManager.GridSize).x);
                     _wallStartPos.y = Mathf.FloorToInt((Controller.PreviewWall.transform.position / GameManager.GridSize).y);
 

@@ -33,7 +33,7 @@ public class WallSetUI : BaseUI
 
     public void OnClickYesButton(PointerEventData data)
     {
-        var controller = GameManager.Instance.CharacterController;
+        var controller = GameManager.Instance.BattleSystem;
         if (controller.PreviewWall.GetComponent<PreviewWall>().CanBuild && controller.PreviewWall.activeInHierarchy) //갇혀있거나 겹쳐있거나 비활성화 되어있지않다면
         {
             controller.SetWall(); // 벽 설치
@@ -45,7 +45,7 @@ public class WallSetUI : BaseUI
     }
     public void OnClickNoButton(PointerEventData data)
     {
-        GameManager.Instance.CharacterController.PlayerControlStatus = PlayerControlStatus.None;
+        GameManager.Instance.BattleSystem.PlayerControlStatus = PlayerControlStatus.None;
         WallPlayerChacter.ResetPreview();
     }
 }

@@ -40,10 +40,10 @@ public class StatuseffectStatAddEffect : IBaseEffectLogic
         //버프 시작할 때 적용한번 해주기
         switch (effectData.Type)
         {
-            case EffectType.StatuseffectStatAdd_Avd:
+            case EffectType.StatuseffectStatAdd_DamageResistance:  // 원본: StatuseffectStatAdd_Avd
                 charcter.CharacterStat.Avd += statuseffectInstance.InstanceData.Get<float>("StatValue");
                 break;
-            case EffectType.StatuseffectStatAdd_Atk:
+            case EffectType.StatuseffectStatAdd_AttackDamage:  // 원본: StatuseffectStatAdd_Atk
                 charcter.CharacterStat.Atk += statuseffectInstance.InstanceData.Get<int>("StatValue");
                 break;
             default:
@@ -58,10 +58,10 @@ public class StatuseffectStatAddEffect : IBaseEffectLogic
         //버프 끝날 때
         switch (effectData.Type)
         {
-            case EffectType.StatuseffectStatAdd_Avd:
+            case EffectType.StatuseffectStatAdd_DamageResistance:  // 원본: StatuseffectStatAdd_Avd
                 charcter.CharacterStat.Avd -= statuseffectInstance.InstanceData.Get<float>("StatValue");
                 break;
-            case EffectType.StatuseffectStatAdd_Atk:
+            case EffectType.StatuseffectStatAdd_AttackDamage:  // 원본: StatuseffectStatAdd_Atk
                 charcter.CharacterStat.Atk -= statuseffectInstance.InstanceData.Get<int>("StatValue");
                 break;
             default:

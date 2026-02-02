@@ -48,25 +48,12 @@ public class SupplyUsePanelUI : BaseUI
         GetButton((int)Buttons.SupplyUseButton).gameObject.BindEvent(OnClickSupplyUseButton);
         GetButton((int)Buttons.ExitButton).gameObject.BindEvent(OnClickExitButton);
 
-        // 현재 ID에 맞는 SupplyData찾기
         _supplyData = DataManager.Instance.GetSupplyData(ItemID);
-        string supplyName = DataManager.Instance.GetSupplyData(ItemID).EditName;
-
-        Assembly assembly = Assembly.GetExecutingAssembly();
-        System.Type t = assembly.GetType(supplyName);
-        object obj = System.Activator.CreateInstance(t);
-
-        if (obj == null)
-        {
-            Debug.LogError($"[ERROR] SupplyUsePanelUI::Init - 해당 보급품 스크립트가 존재하지않습니다.{supplyName}");
-            return;
-        }
-        BaseSupply currentUseBaseSupply = (obj as BaseSupply);
 
         // 보급품 UI 세팅
-        GetText((int)Texts.SupplyNameText).text = currentUseBaseSupply.Name;
-        GetText((int)Texts.SupplyDescriptionText).text = currentUseBaseSupply.Description;
-        GetImage((int)Images.SupplyImage).sprite = currentUseBaseSupply.Image;
+        GetText((int)Texts.SupplyNameText).text = _supplyData.Name;
+        GetText((int)Texts.SupplyDescriptionText).text = _supplyData.Description;
+        // GetImage((int)Images.SupplyImage).sprite = DataManager.Instance._supplyData.Image;
         // GetImage((int)Images.SupplyTypeImage).sprite; // 타입 관련 스프라이트 따로 없음
     }
 

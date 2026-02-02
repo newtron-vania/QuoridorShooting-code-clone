@@ -4,31 +4,20 @@ using UnityEngine;
 
 public class SupplyIceCrystals : BaseSupply
 {
-    public override int ID => 3;
-    public override string Name => "얼음 결정";
-    public override string Description => "적의 공격력을 1만큼 감소시킨다.";
-    public override SupplymentData.SupplyType Type => SupplymentData.SupplyType.Attack;
-    public override SupplymentData.SupplyTarget Target => SupplymentData.SupplyTarget.TargetEnemy;
-    public override SupplymentData.SupplyGrade Rank => SupplymentData.SupplyGrade.Normal;
-    public override int DurationRound => 0;
-    public override int EffectAmount => 1;
-    public override Sprite Image => null;
-    public override CharacterStat SupplyCharacterStat { get => _useTargetBaseCharacter; set => _useTargetBaseCharacter = value; }
+    public override int ID => 4;
+    public override BaseCharacter SupplyBaseCharacter { get => _useTargetBaseCharacter; set => _useTargetBaseCharacter = value; }
 
-    private CharacterStat _useTargetBaseCharacter;
+    private BaseCharacter _useTargetBaseCharacter;
     public override void UseSupply()
     {
         base.UseSupply();
-        if (DurationRound != 0)
+        if (EffectDataList[0].Get<int>("Duration") != 0)
         {
             SupplyManager.Instance._saveDurationSupply.Add(this);
         }
-
-        SupplyCharacterStat.Atk -= EffectAmount;
-        // TEMP : QA이후 업데이트 될 예정
         SupplyUseShowPanelUI supplyUseShowPanelUI = UIManager.Instance.ShowPopupUI<SupplyUseShowPanelUI>();
-        supplyUseShowPanelUI.SupplyName = Name;
-        supplyUseShowPanelUI.TargetName = SupplyCharacterStat.Name;
+        supplyUseShowPanelUI.SupplyID = ID;
+        supplyUseShowPanelUI.TargetName = SupplyBaseCharacter.characterStat.Name;
     }
 
     public override void TargetHighLight()

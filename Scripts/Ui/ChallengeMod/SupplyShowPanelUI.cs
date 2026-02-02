@@ -1,7 +1,5 @@
 using HM;
-using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -110,7 +108,7 @@ public class SupplyShowPanelUI : BaseUI
             SupplymentData supplyData;
             do
             {
-                supplyData = DataManager.Instance.GetSupplyData(Random.Range(0, DataManager.Instance.SupplyDatasCount));
+                supplyData = DataManager.Instance.GetSupplyData(Random.Range(1, DataManager.Instance.SupplyDatasCount));
             } while (supplyData.Grade == selectRank && Random.Range(0, 101) >= ((gameObject.tag == "BoxSupply" ? supplyData.BoxDropRate : supplyData.EnemyDropRate) * 100));
 
             // SupplyItemUI 리스트 저장

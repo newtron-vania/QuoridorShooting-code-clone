@@ -1,5 +1,7 @@
 
 using System.Collections.Generic;
+using HM;
+using Unity.VisualScripting;
 using UnityEngine;
 
 
@@ -13,33 +15,88 @@ using UnityEngine;
  * 테스트를 위해 monobehaviour를 상속시켜 자체적으로 동작할 수 있게 만들었지만
  * 엔진 코드를 사용하지 않아도 될 것 같아 수정 후 게임로직으로써 사용되면 좋을 것 같습니다.
  */
-public class StageManager : MonoBehaviour
+public class StageManager : Singleton<StageManager>, IEventListener
 {
-    //클리어된 마지막 스테이지의 Id
-    public int CurStageId { get; private set; }
-    public int CurChapterLevel { get; private set; }
+    private int _currentChapterLevel = 1;
 
-    private StageProbskillStyle MainProbskillStyle;
+    //클리어된 마지막 스테이지의 Id
+    public int CurStageId { get; set; }
+    public int CurrentChapterLevel
+    {
+        get => _currentChapterLevel;
+        set
+        {
+            _currentChapterLevel = value;
+            CurStageId = _currentChapterLevel * 1000;
+        }
+    } //테스트용으로 일단 public으로 풀어둠
+
+    private StageProbabilityStyle _mainProbabilityStyle;
+    //private ChallengeStageProbability ChallengeProbabilityStyle;
 
     public Dictionary<int, Stage> StageDic;
 
-    //ToDo: 싱글턴이 되거나 monobehaviour를 제거하게 되면 수정해주세요. 
-    private void Awake()
+    //For Temporal Release
+    public Vector3 CurrentPlayerPos = Vector3.zero;
+
+    //도전모드에서 층마다 독립적으로 생성하지 않는다면 반영할 변수
+    //private const int MAX_SHOP_PER_FLOOR = 2;
+    //private const int MAX_ELITE_PER_FLOOR = 2;
+    //private const int MAX_REST_PER_FLOOR = 2;
+
+    public override void Awake()
     {
-        CurChapterLevel = 1;
-        CurStageId = CurChapterLevel * 1000;
+        base.Awake();
+        if (Instance != this)
+        {
+            Debug.Log($"[INFO] StageManager::Awake - Duplicate detected. Destroying self. InstanceID: {GetInstanceID()}");
+            return;
+        }
+
+        CurrentChapterLevel = 1;
+        CurStageId = CurrentChapterLevel * 1000;
+        if (StageDic == null) StageDic = new Dictionary<int, Stage>();
+        else StageDic.Clear();
 
         InitChapterStart();
+    }
+
+    private void OnDestroy()
+    {
+        Debug.Log($"[INFO] StageManager::OnDestroy - InstanceID: {GetInstanceID()}");
+    }
+
+    private void Start()
+    {
+        EventManager.Instance.AddEvent(HM.EventType.OnGameFinish, this);
+    }
+
+    public void OnEvent(HM.EventType eventType, Component sender, object param = null)
+    {
+        switch (eventType)
+        {
+            case HM.EventType.OnGameFinish:
+                Debug.Log("[INFO] StageManager::OnEvent - Cleared Stage " + CurStageId);
+                CompleteStage(CurStageId);
+                break;
+            default:
+                break;
+        }
     }
 
     //새로운 챕터가 실행될 때 실행해주세요.
     public void InitChapterStart()
     {
-        StageDic = new Dictionary<int, Stage>();
-        StageDic.Clear();
-
-        MainProbskillStyle = new BaseStageProbskill(15 + CurChapterLevel, 10, 10, 2, 10, 0);
-
+        // CurStageId = CurrentChapterLevel * 1000;
+        // StageDic = new Dictionary<int, Stage>();
+        // StageDic.Clear();
+        if (StageDic == null)
+            StageDic = new Dictionary<int, Stage>();
+        else
+            StageDic.Clear();
+        //MainProbabilityStyle = new BaseStageProbability(15 + CurrentChapterLevel, 10, 10, 2, 10, 0);
+        //TODO: 기존 BaseStage를 대체하는지 선택하는지 결정
+        _mainProbabilityStyle = new ChallengeStageProbability(10, CurrentChapterLevel);
     }
 
 
@@ -49,16 +106,19 @@ public class StageManager : MonoBehaviour
     ///</summary>
     public Stage GetCurChapterStage(int idx, int fieldLevel)
     {
-        int stageId = idx + CurChapterLevel * 1000;
+        int stageId = idx + CurrentChapterLevel * 1000;
         if (StageDic.ContainsKey(stageId))
             return StageDic[stageId];
 
-        Stage.StageType type = MainProbskillStyle.GetRandomStageType(fieldLevel);
-        Stage stage = new Stage(type, stageId);
+        /*
+         ToDo: 현재 층에서의 스테이지 타입 제한 로직을 추가할 수 있습니다
+         */
+
+        Stage.StageType type = _mainProbabilityStyle.GetRandomStageType(fieldLevel);
+        Stage stage = new Stage(type, stageId, fieldLevel);
         StageDic.Add(stage.Id, stage);
 
         return stage;
-
     }
 
 
@@ -67,9 +127,13 @@ public class StageManager : MonoBehaviour
     ///</summary>
     public void CompleteStage(int clearedStageId)
     {
-        CurStageId = clearedStageId;
-        StageDic[CurStageId].Clear();
+        // CurStageId = clearedStageId;
+        StageDic[clearedStageId].SetCleared();
     }
 
-
+    //도전모드에서 미스터리 타입의 타일을 밟았을 때 호출해서 타입을 다시 결정
+    public Stage.StageType GetMysteryEventType()
+    {
+        return _mainProbabilityStyle.GetMysteryEventType();
+    }
 }

@@ -3,10 +3,10 @@ using UnityEngine;
 
 public class CommonStatuseffectCreationAreaEffect : IBaseEffectLogic, IMovableEventEffectLogic
 {
-    private readonly EffectSystem _effectSystem;
-    public CommonStatuseffectCreationAreaEffect(EffectSystem effectSystem)
+    private readonly StatManager _statManager;
+    public CommonStatuseffectCreationAreaEffect(StatManager statManager)
     {
-        _effectSystem = effectSystem;
+        _statManager = statManager;
     }
 
 
@@ -34,7 +34,7 @@ public class CommonStatuseffectCreationAreaEffect : IBaseEffectLogic, IMovableEv
     {
 
         foreach (var target in targetList)
-            OnTileEnter(skillInstance, effectData, target);
+            OnCellEnter(skillInstance, effectData, target);
     }
 
     private void EndEffect(SkillInstance skillInstance, EffectData effectData, List<IEffectableProvider> targetList)
@@ -45,7 +45,7 @@ public class CommonStatuseffectCreationAreaEffect : IBaseEffectLogic, IMovableEv
         foreach (var target in targetList)
         {
             var statuseffectController = target.GetEffectable<IStatuseffectParticipant>();
-            OnTileExit(skillInstance, effectData, target);
+            OnCellExit(skillInstance, effectData, target);
         }
 
     }
@@ -57,17 +57,17 @@ public class CommonStatuseffectCreationAreaEffect : IBaseEffectLogic, IMovableEv
 
         switch (movableEvent)
         {
-            case MovableEvent.OnTileEnter:
-                OnTileEnter(skillInstance, effectData, target);
+            case MovableEvent.OnCellEnter:
+                OnCellEnter(skillInstance, effectData, target);
                 break;
-            case MovableEvent.OnTileExit:
+            case MovableEvent.OnCellExit:
                 if (effectData.Type == EffectType.CommonStatuseffectCreationArea_AreaOnly)
-                    OnTileExit(skillInstance, effectData, target);
+                    OnCellExit(skillInstance, effectData, target);
                 break;
         }
     }
 
-    private void OnTileEnter(SkillInstance skillInstance, EffectData effectData, IEffectableProvider target)
+    private void OnCellEnter(SkillInstance skillInstance, EffectData effectData, IEffectableProvider target)
     {
         var statuseffectTarget = target.GetEffectable<IStatuseffectParticipant>();
 
@@ -76,7 +76,7 @@ public class CommonStatuseffectCreationAreaEffect : IBaseEffectLogic, IMovableEv
 
     }
 
-    private void OnTileExit(SkillInstance skillInstance, EffectData effectData, IEffectableProvider target)
+    private void OnCellExit(SkillInstance skillInstance, EffectData effectData, IEffectableProvider target)
     {
         var statuseffectTarget = target.GetEffectable<IStatuseffectParticipant>();
 
@@ -89,14 +89,15 @@ public class CommonStatuseffectCreationAreaEffect : IBaseEffectLogic, IMovableEv
 
     private void ApplyStatuseffect(EffectInstance effectInstance, EffectData effectData, int statuseffectId, IEffectableProvider target)
     {
-        if (!_effectSystem.StatuseffectDataDict.TryGetValue(statuseffectId, out StatuseffectData statuseffectData))
+        StatuseffectData statuseffectData = DataManager.Instance.GetStatuseffectData(statuseffectId);
+        if (statuseffectData == null)
         {
-            Debug.LogError($"[ERROR]SkillStateChangeEffect::ApplyStatuseffect: StatuseffectId {statuseffectId} not found in StatuseffectDataDict");
+            Debug.LogError($"[ERROR]SkillStateChangeEffect::ApplyStatuseffect: StatuseffectId {statuseffectId} not found in DataManager");
             return;
         }
 
         StatuseffectInstance newInstance
-              = new StatuseffectInstance(_effectSystem, statuseffectData, effectInstance.Source, target, effectData);
+              = new StatuseffectInstance(_statManager, statuseffectData, effectInstance.Source, target, effectData);
         newInstance.InvokeInstanceEvent(EffectInstanceEvent.Start);
     }
 }

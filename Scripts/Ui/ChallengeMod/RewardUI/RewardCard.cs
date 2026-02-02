@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public struct RewardCardData
 {
-    private int        _id;
+    private int        _index;
     private int        _amount;
     private GradeType  _grade;
     private RewardType _category;
@@ -13,7 +13,7 @@ public struct RewardCardData
     private Sprite     _image;
     private string     _description;
 
-    public int        Id          => _id;
+    public int        Index          => _index;
     public int        Amount      => _amount;
     public GradeType  Grade       => _grade;
     public RewardType Category    => _category;
@@ -22,9 +22,9 @@ public struct RewardCardData
     public string     Description => _description;
 
 
-    public RewardCardData(int id, int amount, GradeType grade, RewardType category, string name, Sprite image, string description)
+    public RewardCardData(int index, int amount, GradeType grade, RewardType category, string name, Sprite image, string description)
     {
-        _id          = id;
+        _index          = index;
         _amount      = amount;
         _grade       = grade;
         _category    = category;
@@ -74,7 +74,7 @@ public class RewardCard : MonoBehaviour
 
     public void SetRewardCard(RewardCardData rewardCardData)
     {
-        _id     = rewardCardData.Id;
+        _id     = rewardCardData.Index;
         _amount = rewardCardData.Amount;
 
         SetCardColor(rewardCardData.Grade);

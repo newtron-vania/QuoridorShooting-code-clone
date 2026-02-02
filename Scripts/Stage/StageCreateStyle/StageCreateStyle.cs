@@ -13,7 +13,8 @@ public abstract class StageCreateStyle
 {
     protected int _maxChild;
 
-    protected readonly int _seed;
+    /*protected readonly*/
+    public int Seed; //검색용 주석: 절차적맵 생성시드, seed, 시드
     public int Count { get; protected set; }
 
     //자식간의 사이각

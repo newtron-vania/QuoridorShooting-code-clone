@@ -23,7 +23,7 @@ public class PreviewWall : MonoBehaviour
             // Vector2Int gridPosition = GameManager.ToGridPosition(transform.position - new Vector3(0.5f, 0.5f, 0) * GameManager.GridSize);
             int rotation = (int)((transform.rotation.eulerAngles.z / 90) % 2);
             wallList.Add(new WallData(transform.position, rotation != 0));
-            var mapGraph = PathFindingUtils.GetMapGraph(GameManager.Instance.CharacterController.GetAllCharactersPosition(), wallList, true);
+            var mapGraph = PathFindingUtils.GetMapGraph(GameManager.Instance.BattleSystem.GetAllCharactersPosition(), wallList, true);
             if (PathFindingUtils.CheckStuck(mapGraph)) return false;
             return true;
         }
@@ -168,7 +168,7 @@ public class PreviewWall : MonoBehaviour
             if (!isFake) MapGraph = tempMapGraph.Clone() as int[,];
             return true;
         }
-        var mapGraph = PathFindingUtils.GetMapGraph(GameManager.Instance.CharacterController.GetAllCharactersPosition(), GameManager.Instance.WallList, true);
+        var mapGraph = PathFindingUtils.GetMapGraph(GameManager.Instance.BattleSystem.GetAllCharactersPosition(), GameManager.Instance.WallList, true);
         if (!PathFindingUtils.CheckStuck(mapGraph))
         {
             if (!isFake) MapGraph = tempMapGraph.Clone() as int[,];

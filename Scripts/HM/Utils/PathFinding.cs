@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using HM.Containers;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 namespace HM
@@ -30,9 +29,9 @@ namespace HM
             {
                 mapGraph = new bool[9, 9, 4]; // 9x9 맵, 4방향
                 for (var x = 0; x < 9; x++)
-                for (var y = 0; y < 9; y++)
-                for (var direction = 0; direction < 4; direction++)
-                    mapGraph[x, y, direction] = true;
+                    for (var y = 0; y < 9; y++)
+                        for (var direction = 0; direction < 4; direction++)
+                            mapGraph[x, y, direction] = true;
                 foreach (var wall in walls) SetWallData(wall);
                 if (canThrounghCharacter) return mapGraph;
                 foreach (var characterPosition in characterPositions)
@@ -89,7 +88,7 @@ namespace HM
 
             // 목표지점으로 도달 가능한지 확인하는 함수 (using DFS)
             // 제한된 거리 추가
-            public static bool CanReach(bool[,,] tileGraph, Vector2Int start, Vector2Int goal, int limit = 999,
+            public static bool CanReach(bool[,,] cellGraph, Vector2Int start, Vector2Int goal, int limit = 999,
                 bool isExternal = false)
             {
                 if (isExternal)
@@ -101,10 +100,10 @@ namespace HM
 
                 bool[,] visited = new bool[9, 9];
 
-                return BFS(tileGraph, ref visited, start, goal, limit);
+                return BFS(cellGraph, ref visited, start, goal, limit);
             }
 
-            public static bool CanReachWithoutStuckInWall(bool[,,] tileGraph, Vector2Int start, Vector2Int goal,
+            public static bool CanReachWithoutStuckInWall(bool[,,] cellGraph, Vector2Int start, Vector2Int goal,
                 bool isExternal = false)
             {
                 // 1. 좌표계 변환 및 유효성 검사
@@ -156,7 +155,7 @@ namespace HM
                     }
 
                     // 4. 이동 경로의 벽 검사를 별도 메서드로 위임
-                    if (IsMovementBlocked(tileGraph, prevX, prevY, x0, y0, sy, dx, dy, error, e2))
+                    if (IsMovementBlocked(cellGraph, prevX, prevY, x0, y0, sy, dx, dy, error, e2))
                     {
                         return false;
                     }
@@ -166,9 +165,9 @@ namespace HM
             }
 
             /// <summary>
-            /// 두 타일 간의 이동이 벽에 막히는지 검사합니다. (기존 로직 유지)
+            /// 두 셀 간의 이동이 벽에 막히는지 검사합니다. (기존 로직 유지)
             /// </summary>
-            private static bool IsMovementBlocked(bool[,,] tileGraph, int prevX, int prevY, int currentX, int currentY,
+            private static bool IsMovementBlocked(bool[,,] cellGraph, int prevX, int prevY, int currentX, int currentY,
                 int sy, int dx, int dy, int error, int e2)
             {
                 // 이동이 없으면 막히지 않음
@@ -181,12 +180,12 @@ namespace HM
                 // 수직 이동 검사
                 if (currentX == prevX && currentY != prevY)
                 {
-                    if (!tileGraph[prevX, prevY, (int)primaryVerticalDir]) return true;
+                    if (!cellGraph[prevX, prevY, (int)primaryVerticalDir]) return true;
                 }
                 // 수평 이동 검사 (항상 오른쪽으로만 이동)
                 else if (currentX != prevX && currentY == prevY)
                 {
-                    if (!tileGraph[prevX, prevY, (int)Direction.Right]) return true;
+                    if (!cellGraph[prevX, prevY, (int)Direction.Right]) return true;
                 }
                 // 대각선 이동 검사 (기존 로직 보존)
                 else if (currentX != prevX && currentY != prevY)
@@ -194,10 +193,10 @@ namespace HM
                     int mid = dx + dy;
                     if (mid == e2)
                     {
-                        bool right = !tileGraph[prevX, prevY, (int)Direction.Right];
-                        bool vertical = !tileGraph[prevX, prevY, (int)primaryVerticalDir];
-                        bool left = !tileGraph[currentX, currentY, (int)Direction.Left];
-                        bool oppositeVertical = !tileGraph[currentX, currentY, (int)oppositeVerticalDir];
+                        bool right = !cellGraph[prevX, prevY, (int)Direction.Right];
+                        bool vertical = !cellGraph[prevX, prevY, (int)primaryVerticalDir];
+                        bool left = !cellGraph[currentX, currentY, (int)Direction.Left];
+                        bool oppositeVertical = !cellGraph[currentX, currentY, (int)oppositeVerticalDir];
 
                         if ((vertical && right) || (oppositeVertical && left) || (left && right) ||
                             (vertical && oppositeVertical)) return true;
@@ -206,27 +205,27 @@ namespace HM
                     {
                         if (Mathf.Abs(dx) > Mathf.Abs(dy))
                         {
-                            bool vertical = !tileGraph[prevX, prevY, (int)primaryVerticalDir];
-                            bool left = !tileGraph[currentX, currentY, (int)Direction.Left];
+                            bool vertical = !cellGraph[prevX, prevY, (int)primaryVerticalDir];
+                            bool left = !cellGraph[currentX, currentY, (int)Direction.Left];
                             if (vertical || left) return true;
                         }
                         else
                         {
-                            bool right = !tileGraph[prevX, prevY, (int)Direction.Right];
-                            bool oppositeVertical = !tileGraph[currentX, currentY, (int)oppositeVerticalDir];
+                            bool right = !cellGraph[prevX, prevY, (int)Direction.Right];
+                            bool oppositeVertical = !cellGraph[currentX, currentY, (int)oppositeVerticalDir];
                             if (right || oppositeVertical) return true;
                         }
                     }
                     else if (mid > error)
                     {
-                        bool vertical = !tileGraph[prevX, prevY, (int)primaryVerticalDir];
-                        bool left = !tileGraph[currentX, currentY, (int)Direction.Left];
+                        bool vertical = !cellGraph[prevX, prevY, (int)primaryVerticalDir];
+                        bool left = !cellGraph[currentX, currentY, (int)Direction.Left];
                         if (vertical || left) return true;
                     }
                     else // mid < error
                     {
-                        bool right = !tileGraph[prevX, prevY, (int)Direction.Right];
-                        bool oppositeVertical = !tileGraph[currentX, currentY, (int)oppositeVerticalDir];
+                        bool right = !cellGraph[prevX, prevY, (int)Direction.Right];
+                        bool oppositeVertical = !cellGraph[currentX, currentY, (int)oppositeVerticalDir];
                         if (right || oppositeVertical) return true;
                     }
                 }
@@ -234,22 +233,21 @@ namespace HM
                 return false; // 경로가 막히지 않음
             }
 
-            public static bool CheckStuck(bool[,,] tileGraph)
+            public static bool CheckStuck(bool[,,] cellGraph)
             {
                 var visited = new bool[9, 9];
-                // DFS(tileGraph, visited, new Vector2Int(0, 0), new Vector2Int(-1, -1), 999, 0, false);
-                BFS(tileGraph, ref visited, new Vector2Int(0, 0), new Vector2Int(-1, -1), 999);
+                BFS(cellGraph, ref visited, new Vector2Int(0, 0), new Vector2Int(-1, -1), 999);
                 for (var x = 0; x < 9; x++)
-                for (var y = 0; y < 9; y++)
-                    if (!visited[x, y])
-                        return true;
+                    for (var y = 0; y < 9; y++)
+                        if (!visited[x, y])
+                            return true;
                 return false;
             }
 
-            private static bool BFS(bool[,,] tileGraph, ref bool[,] visited, Vector2Int start, Vector2Int goal,
+            private static bool BFS(bool[,,] cellGraph, ref bool[,] visited, Vector2Int start, Vector2Int goal,
                 int limit)
             {
-                visited = new bool[tileGraph.GetLength(0), tileGraph.GetLength(1)];
+                visited = new bool[cellGraph.GetLength(0), cellGraph.GetLength(1)];
                 Queue<(Vector2Int position, int depth)> queue = new();
                 Vector2Int[] directions = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
 
@@ -269,7 +267,7 @@ namespace HM
 
                         if (!IsPositionValid(next)) // 범위를 벗어난 경우
                             continue;
-                        if (!tileGraph[now.x, now.y, i]) // 벽이 있는 경우
+                        if (!cellGraph[now.x, now.y, i]) // 벽이 있는 경우
                             continue;
                         if (visited[next.x, next.y]) // 이미 방문한 경우
                             continue;
@@ -284,10 +282,10 @@ namespace HM
 
 
             // A* 알고리즘을 이용하여 경로를 찾는 함수
-            public static List<Vector2Int> FindPath(bool[,,] tileGraph, Vector2Int start, Vector2Int goal,
+            public static List<Vector2Int> FindPath(bool[,,] cellGraph, Vector2Int start, Vector2Int goal,
                 List<Vector2Int> movables = null)
             {
-                return FindPath(tileGraph, start, new List<Vector2Int> { goal }, movables);
+                return FindPath(cellGraph, start, new List<Vector2Int> { goal }, movables);
             }
 
             // A* 알고리즘을 이용하여 경로를 찾는 함수
@@ -298,7 +296,7 @@ namespace HM
              goals - 목표지머(복수)
              directions - 이동 가능 방향
              */
-            public static List<Vector2Int> FindPath(bool[,,] tileGraph, Vector2Int start, List<Vector2Int> goals,
+            public static List<Vector2Int> FindPath(bool[,,] cellGraph, Vector2Int start, List<Vector2Int> goals,
                 List<Vector2Int> movables = null)
             {
                 var directions = movables?.ToArray();
@@ -336,7 +334,7 @@ namespace HM
                         closestPath = currentPath;
                     }
 
-                    foreach (var neighborPosition in GetNeighbors(tileGraph, currentPath.Position, directions))
+                    foreach (var neighborPosition in GetNeighbors(cellGraph, currentPath.Position, directions))
                     {
                         if (closedList.Any(path => path.Position == neighborPosition))
                             continue;
@@ -369,7 +367,7 @@ namespace HM
             }
 
             // 현재 위치에서 [이동 가능]한 이웃들을 반환하는 함수
-            private static List<Vector2Int> GetNeighbors(bool[,,] tileGraph, Vector2Int pathPosition,
+            private static List<Vector2Int> GetNeighbors(bool[,,] cellGraph, Vector2Int pathPosition,
                 Vector2Int[] directions = null)
             {
                 var neighbors = new List<Vector2Int>();
@@ -380,7 +378,7 @@ namespace HM
                 {
                     var neighborPosition = pathPosition + directions[i];
                     if (!IsPositionValid(neighborPosition)) continue;
-                    if (CanReachWithoutStuckInWall(tileGraph, pathPosition, neighborPosition))
+                    if (CanReachWithoutStuckInWall(cellGraph, pathPosition, neighborPosition))
                         neighbors.Add(neighborPosition);
                 }
 
