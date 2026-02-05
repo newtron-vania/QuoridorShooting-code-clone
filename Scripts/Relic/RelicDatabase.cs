@@ -3,18 +3,27 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class RelicDatabase : MonoBehaviour
 {
     public static RelicDatabase Instance { get; private set; }
 
-    // DataManager에서 사용하는 키와 동일하다고 가정 (상수로 관리 권장)
-    private const string RELIC_DATA_PATH = "LegacyData/JSON/RelicTestDatas"; // 확장자 제외
-    private const string HEX_KEY = "YourHexKeyHere"; // 실제 키값 필요
+    private const string RELIC_DATA_PATH = "LegacyData/JSON/RelicTestDatas";
 
     private readonly Dictionary<int, RelicData> _relicLibrary = new();
+
+    // JSON 직렬화 설정 — StringEnumConverter로 enum 문자열 파싱 지원
+    private static readonly JsonSerializerSettings _jsonSettings = new()
+    {
+        Converters = new List<JsonConverter>
+        {
+            new StringEnumConverter()
+        },
+        NullValueHandling = NullValueHandling.Ignore,
+        MissingMemberHandling = MissingMemberHandling.Ignore,
+    };
 
     private void Awake()
     {
@@ -37,10 +46,9 @@ public class RelicDatabase : MonoBehaviour
 
         try
         {
-            // 현재 JSON 구조는 무조건 Wrapper 형식이므로 Wrapper로 바로 파싱 시도
-            var wrapper = JsonConvert.DeserializeObject<RelicDataWrapper>(jsonFile.text);
-        
-            if (wrapper != null && wrapper.Datas != null)
+            var wrapper = JsonConvert.DeserializeObject<RelicDataWrapper>(jsonFile.text, _jsonSettings);
+
+            if (wrapper?.Datas != null)
             {
                 _relicLibrary.Clear();
                 foreach (var relic in wrapper.Datas)
@@ -48,17 +56,13 @@ public class RelicDatabase : MonoBehaviour
                     _relicLibrary[relic.Id] = relic;
                 }
                 Debug.Log($"[RelicDatabase] 로드 성공: {_relicLibrary.Count}개");
-                
+
                 if (_relicLibrary.Count > 0)
-                {
-                    // 데이터 저장 로직 후
-                    PrintAllRelics(); // 확인을 위한 출력 호출
-                }
+                    PrintAllRelics();
             }
         }
         catch (JsonSerializationException jsonEx)
         {
-            // Enum 이름 불일치 같은 구체적인 파싱 에러를 여기서 잡습니다.
             Debug.LogError($"[RelicDatabase] JSON 데이터 형식 오류: {jsonEx.Message}");
         }
         catch (Exception ex)
@@ -69,17 +73,14 @@ public class RelicDatabase : MonoBehaviour
 
     public RelicData GetRelic(int id)
     {
-        if (_relicLibrary.TryGetValue(id, out var data)) return data;
-        return null;
+        return _relicLibrary.TryGetValue(id, out var data) ? data : null;
     }
 
     public List<RelicData> GetAllRelics()
     {
         return _relicLibrary.Values.ToList();
     }
-    
-    
-    
+
     public void PrintAllRelics()
     {
         if (_relicLibrary.Count == 0)
@@ -95,26 +96,60 @@ public class RelicDatabase : MonoBehaviour
         foreach (var relic in _relicLibrary.Values)
         {
             sb.AppendLine($"<b>ID:</b> {relic.Id} | <b>Name:</b> {relic.Name}");
-            sb.AppendLine($"<b>Rarity:</b> {relic.Rarity} | <b>Target:</b> {relic.TargetFilter}");
+            sb.AppendLine($"<b>Rarity:</b> {relic.Rarity} | <b>Target:</b> {relic.TargetFilter ?? "N/A"}");
             sb.AppendLine($"<b>Description:</b> {relic.Description}");
 
-            // 트리거 타입 리스트 출력
-            string triggers = string.Join(", ", relic.TriggerTypes);
-            sb.AppendLine($"<b>Triggers:</b> [{triggers}]");
+            // 트리거 타입
+            if (relic.TriggerTypes != null)
+            {
+                string triggers = string.Join(", ", relic.TriggerTypes);
+                sb.AppendLine($"<b>Triggers:</b> [{triggers}]");
+            }
 
-            // 트리거 파라미터 (Dictionary) 출력
+            // 트리거 파라미터 (JToken)
             if (relic.TriggerParams != null && relic.TriggerParams.Count > 0)
             {
                 string tParams = string.Join(", ", relic.TriggerParams.Select(kv => $"{kv.Key}: {kv.Value}"));
                 sb.AppendLine($"   └ TriggerParams: {tParams}");
             }
 
-            // 로직 타입 및 파라미터 출력
-            sb.AppendLine($"<b>Logic:</b> {relic.LogicType}");
-            if (relic.LogicParams != null && relic.LogicParams.Count > 0)
+            // 시너지
+            if (relic.Synergy != null && relic.Synergy.Count > 0)
             {
-                string lParams = string.Join(", ", relic.LogicParams.Select(kv => $"{kv.Key}: {kv.Value}"));
-                sb.AppendLine($"   └ LogicParams: {lParams}");
+                sb.AppendLine($"<b>Synergy:</b> [{string.Join(", ", relic.Synergy)}]");
+            }
+
+            // Priority
+            if (relic.Priority != 0)
+            {
+                sb.AppendLine($"<b>Priority:</b> {relic.Priority}");
+            }
+
+            // Effects (신규 스키마)
+            if (relic.Effects != null && relic.Effects.Count > 0)
+            {
+                sb.AppendLine($"<b>Effects:</b> ({relic.Effects.Count}개)");
+                for (int i = 0; i < relic.Effects.Count; i++)
+                {
+                    var effect = relic.Effects[i];
+                    sb.Append($"   [{i}] {effect.EffectType}");
+                    if (effect.Condition != null)
+                        sb.Append($" (조건: {effect.Condition.ConditionType})");
+                    if (effect.IsReversible)
+                        sb.Append(" [가역]");
+                    sb.AppendLine();
+                }
+            }
+
+            // 하위호환: LogicType (Phase 1)
+            if (relic.LogicType.HasValue)
+            {
+                sb.AppendLine($"<b>LogicType (Legacy):</b> {relic.LogicType.Value}");
+                if (relic.LogicParams != null && relic.LogicParams.Count > 0)
+                {
+                    string lParams = string.Join(", ", relic.LogicParams.Select(kv => $"{kv.Key}: {kv.Value}"));
+                    sb.AppendLine($"   └ LogicParams: {lParams}");
+                }
             }
 
             sb.AppendLine($"<b>IconPath:</b> {relic.IconPath}");
@@ -128,6 +163,5 @@ public class RelicDatabase : MonoBehaviour
 [Serializable]
 public class RelicDataWrapper
 {
-    // [중요] JSON 파일의 키 값("Datas")과 매핑
     [JsonProperty("Datas")] public List<RelicData> Datas;
 }

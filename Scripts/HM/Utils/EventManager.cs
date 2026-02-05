@@ -27,6 +27,18 @@ namespace HM
         OnCharacterDamaged,
         OnPlayerHpChanged,
         OnCharacterTurnStart,
+
+        // 전투 세부 이벤트 (유물 시스템용)
+        OnHitSuccess,
+        OnHitFail,
+        OnDefenseSuccess,
+        OnDefenseFail,
+        OnSkillUsed,
+
+        // 상태이상 이벤트 (유물 시스템용)
+        OnStatusApplied,
+        OnStatusRemoved,
+
         etc,
     }
 
@@ -51,7 +63,9 @@ namespace HM
         {
             if (_eventListners.TryGetValue(eventType, out var listners))
             {
-                foreach (var listner in listners)
+                // 스냅샷 복사: 핸들러 내부에서 AddEvent/RemoveEvent 호출 시 안전
+                var snapshot = new List<IEventListener>(listners);
+                foreach (var listner in snapshot)
                 {
                     listner?.OnEvent(eventType, sender, param);
                 }

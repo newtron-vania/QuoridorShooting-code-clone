@@ -18,7 +18,9 @@ namespace CharacterDefinition
     {
         Successor,      // 계승자
         Freeman,        // 자유인
-        Engineer       // 기술자
+        Engineer,       // 기술자
+        Awakener,       // 각성자
+        Pathfinder      // 선구자
     }
     public enum PlayerControlStatus
     {

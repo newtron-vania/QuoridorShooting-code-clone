@@ -2,43 +2,110 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using HM;
+using Newtonsoft.Json.Linq;
 using UnityEngine;
 using EventType = HM.EventType;
 
 /// <summary>
-/// 유물 발동 트리거 타입
+/// 유물 발동 트리거 타입 → EventType 매핑
 /// </summary>
 public static class RelicTriggerMapper
 {
     private static readonly Dictionary<RelicTriggerType, EventType> _map = new()
     {
-        { RelicTriggerType.OnTurnStart, EventType.OnTurnStart },
-        { RelicTriggerType.OnTurnEnd, EventType.OnTurnEnd },
-        { RelicTriggerType.OnDamaged, EventType.OnCharacterDamaged },
-        { RelicTriggerType.OnHpChanged, EventType.OnPlayerHpChanged }, // 또는 OnEnemyHpChanged와 연동
-        { RelicTriggerType.OnCharacterDeath, EventType.OnCharacterDead },
-        { RelicTriggerType.OnBattleWin, EventType.OnGameFinish },
-        { RelicTriggerType.OnBattleStart, EventType.OnCharacterTurnStart }
+        // 기존 매핑
+        { RelicTriggerType.OnTurnStart,       EventType.OnTurnStart },
+        { RelicTriggerType.OnTurnEnd,         EventType.OnTurnEnd },
+        { RelicTriggerType.OnDamaged,         EventType.OnCharacterDamaged },
+        { RelicTriggerType.OnHpChanged,       EventType.OnPlayerHpChanged },
+        { RelicTriggerType.OnCharacterDeath,  EventType.OnCharacterDead },
+        { RelicTriggerType.OnBattleWin,       EventType.OnGameFinish },
+        { RelicTriggerType.OnBattleStart,     EventType.OnBattleStart },
+
+        // 추가 매핑
+        { RelicTriggerType.OnFirstTurn,       EventType.OnTurnStart },
+        { RelicTriggerType.OnMove,            EventType.OnCellEnter },
+        { RelicTriggerType.OnTileEnter,       EventType.OnCellEnter },
+        { RelicTriggerType.OnTileExit,        EventType.OnCellExit },
+        { RelicTriggerType.OnStageComplete,   EventType.OnGameFinish },
+
+        // 전투 세부 이벤트
+        { RelicTriggerType.OnHitSuccess,      EventType.OnHitSuccess },
+        { RelicTriggerType.OnHitFail,         EventType.OnHitFail },
+        { RelicTriggerType.OnDefenseSuccess,  EventType.OnDefenseSuccess },
+        { RelicTriggerType.OnDefenseFail,     EventType.OnDefenseFail },
+        { RelicTriggerType.OnSkillUsed,       EventType.OnSkillUsed },
+
+        // 상태이상 이벤트
+        { RelicTriggerType.OnStatusApplied,   EventType.OnStatusApplied },
+        { RelicTriggerType.OnStatusRemoved,   EventType.OnStatusRemoved },
     };
+
+    // 역매핑 캐시: EventType → 해당하는 모든 RelicTriggerType
+    private static readonly Dictionary<EventType, List<RelicTriggerType>> _reverseMap;
+
+    static RelicTriggerMapper()
+    {
+        _reverseMap = new Dictionary<EventType, List<RelicTriggerType>>();
+        foreach (var kvp in _map)
+        {
+            if (!_reverseMap.ContainsKey(kvp.Value))
+                _reverseMap[kvp.Value] = new List<RelicTriggerType>();
+            _reverseMap[kvp.Value].Add(kvp.Key);
+        }
+    }
 
     public static EventType GetSystemEventType(RelicTriggerType triggerType)
     {
         return _map.TryGetValue(triggerType, out var eventType) ? eventType : EventType.None;
     }
+
+    /// <summary>
+    /// EventType에 대응하는 모든 RelicTriggerType 반환 (역매핑)
+    /// </summary>
+    public static List<RelicTriggerType> GetTriggerTypes(EventType eventType)
+    {
+        return _reverseMap.TryGetValue(eventType, out var triggers)
+            ? triggers : new List<RelicTriggerType>();
+    }
+}
+
+/// <summary>
+/// 피해 이벤트에 동반되는 일시적 데이터
+/// 전투 시스템에서 생성하여 EventManager로 전달
+/// </summary>
+public struct DamageEventData
+{
+    public BaseCharacter Attacker;
+    public BaseCharacter Target;
+    public float RawDamage;
+    public float FinalDamage;
+    public bool IsCritical;
+    public int SkillId;
 }
 
 /// <summary>
 /// 시스템 이벤트 발생 시 유물에게 전달되는 데이터 패킷
-/// object 기반으로 다양한 Subject/ContextData 지원
 /// </summary>
 public class RelicSignal
 {
     public RelicTriggerType TriggerType;
 
-    // 이벤트 주체 (BaseCharacter, RewardContext, Tile, GameManager 등)
+    // 이벤트 주체 (피격자, 사망자, 행동자)
     public object Subject;
 
-    // 추가 컨텍스트 데이터 (DamageEventData, 드롭 아이템 리스트 등)
+    // === 일시적 이벤트 데이터 ===
+
+    // 공격자 참조 (OnDamaged, OnDealDamage 시)
+    public BaseCharacter Attacker;
+
+    // 실제 피해량 (OnDamaged 시)
+    public float DamageAmount;
+
+    // 사용된 스킬 ID (OnSkillUsed 시)
+    public int SkillId;
+
+    // 추가 컨텍스트 데이터 (DamageEventData 등)
     public object ContextData;
 
     // 실시간 파라미터 (수치 데이터)
@@ -52,40 +119,51 @@ public class RelicSignal
 public interface IRelic
 {
     int Id { get; }
-
-    // 데이터만으로 스스로를 시스템에 등록
     void Register(RelicData data);
-
-    // EventManager의 콜백 입구
     void Execute(RelicSignal signal);
     void Unregister();
 }
 
-// 조건 판단: 이 시그널의 주체가 유물의 효과 대상(Target)이 될 수 있는지 확인
+/// <summary>
+/// 트리거 레벨 조건 판단 (계층 1)
+/// </summary>
 public interface IRelicCondition
 {
-    bool IsSatisfied(RelicSignal signal, Dictionary<string, float> conditionParams);
+    bool IsSatisfied(RelicSignal signal, Dictionary<string, JToken> conditionParams);
+}
+
+/// <summary>
+/// 효과 레벨 조건 판단 (계층 2)
+/// 효과 실행 여부를 결정하는 세부 조건
+/// </summary>
+public interface IRelicEffectCondition
+{
+    bool Evaluate(BaseCharacter target, RelicSignal signal, Dictionary<string, JToken> condParams);
+}
+
+/// <summary>
+/// 상태를 보존하는 조건 — 발동 횟수, 쿨다운 등 추적
+/// </summary>
+public interface IStatefulRelicCondition : IRelicEffectCondition
+{
+    void Reset(RelicResetScope scope);
+    void OnConditionPassed();
+    Dictionary<string, object> GetState();
+    void SetState(Dictionary<string, object> state);
 }
 
 /// <summary>
 /// 유물 효과 적용 전략 인터페이스
-/// object 기반으로 다양한 대상 지원 (BaseCharacter, RewardContext, Tile, Manager 등)
 /// </summary>
 public interface IRelicEffect
 {
-    // 대상에게 효과 적용 (가변 Param 기반 계산식 포함)
-    void Apply(object target, RelicSignal signal, Dictionary<string, float> logicParams);
-
-    // 대상에게서 효과 제거
+    void Apply(object target, RelicSignal signal, Dictionary<string, JToken> resolvedParams);
     void Remove(object target);
-
-    // 현재 효과가 적용된 대상 목록
     HashSet<object> AffectedTargets { get; }
 }
 
 /// <summary>
 /// 유물의 추상 베이스 클래스
-/// 구체적인 유물은 이를 상속받아 Execute를 구현
 /// </summary>
 public abstract class RelicInstance : IRelic, IEventListener
 {
@@ -95,13 +173,12 @@ public abstract class RelicInstance : IRelic, IEventListener
     protected IRelicEffect _effect;
     protected List<EventType> _boundEventTypes;
 
-    // 데이터로부터 자신을 초기화하고 EventManager에 자동 등록
     public virtual void Register(RelicData data)
     {
         _data = data;
         _boundEventTypes = new List<EventType>();
 
-        // Factory를 통해 Condition 리스트 생성
+        // Condition 리스트 생성
         _conditions = new List<IRelicCondition>();
         foreach (var triggerType in data.TriggerTypes)
         {
@@ -109,10 +186,11 @@ public abstract class RelicInstance : IRelic, IEventListener
             _conditions.Add(condition);
         }
 
-        // Factory를 통해 Effect 생성
-        _effect = RelicFactory.CreateEffect(data.LogicType);
+        // Effect 생성 (하위호환: LogicType이 있는 경우)
+        if (data.LogicType.HasValue)
+            _effect = RelicFactory.CreateEffect(data.LogicType.Value);
 
-        // 각 TriggerType에 맞는 시스템 이벤트를 찾아 구독
+        // 각 TriggerType에 맞는 시스템 이벤트 구독
         foreach (var triggerType in data.TriggerTypes)
         {
             var eventType = RelicTriggerMapper.GetSystemEventType(triggerType);
@@ -135,46 +213,57 @@ public abstract class RelicInstance : IRelic, IEventListener
         }
     }
 
-    // IEventListener 구현
-    public void OnEvent(EventType eventType, Component sender, object param = null)
+    // IEventListener 구현 — EventType → TriggerType 역매핑
+    public virtual void OnEvent(EventType eventType, Component sender, object param = null)
     {
-        // 첫 번째 TriggerType으로 파싱
-        var signal = RelicSignalParser.Parse(_data.TriggerTypes[0], param);
-        if (signal != null)
+        // 수신한 EventType에 대응하는 TriggerType 결정
+        foreach (var triggerType in _data.TriggerTypes)
         {
-            Execute(signal);
+            if (RelicTriggerMapper.GetSystemEventType(triggerType) == eventType)
+            {
+                var signal = RelicSignalParser.Parse(triggerType, param);
+                if (signal != null)
+                    Execute(signal);
+            }
         }
     }
 
-    // 시스템 이벤트 수신 시 실행되는 진입점 (하위 클래스에서 구현)
     public abstract void Execute(RelicSignal signal);
 
-    // EventManager로부터 구독 해제 및 정리
     public virtual void Unregister()
     {
-        // 모든 대상에게서 효과 제거
-        foreach (var target in _effect.AffectedTargets.ToArray())
+        // 효과 제거
+        if (_effect != null)
         {
-            _effect.Remove(target);
+            foreach (var target in _effect.AffectedTargets.ToArray())
+                _effect.Remove(target);
         }
 
         // EventManager 구독 해제
         foreach (var eventType in _boundEventTypes)
-        {
             EventManager.Instance.RemoveEvent(eventType, this);
-        }
     }
 
-    // 모든 조건이 충족되는지 체크 (AND 조건)
+    // 모든 트리거 조건이 충족되는지 체크 (AND 조건)
     protected bool CheckAllConditions(RelicSignal signal)
     {
         foreach (var condition in _conditions)
         {
             if (!condition.IsSatisfied(signal, _data.TriggerParams))
-            {
                 return false;
-            }
         }
         return true;
+    }
+
+    // Phase 1 하위호환: LogicParams (float) → JToken 변환
+    protected Dictionary<string, JToken> ConvertLogicParams()
+    {
+        var result = new Dictionary<string, JToken>();
+        if (_data.LogicParams != null)
+        {
+            foreach (var kvp in _data.LogicParams)
+                result[kvp.Key] = JToken.FromObject(kvp.Value);
+        }
+        return result;
     }
 }
